@@ -15,7 +15,7 @@ CPU::CPU()
 void CPU::initialize()
 {
         // Initialize variables
-        program_counter_ = static_cast< uint8_t >( 0x200 );
+        program_counter_ = static_cast< uint64_t >( 0x200 );
         opcode_          = 0;
         index_register_  = 0;
         stack_ptr_       = 0;
@@ -138,13 +138,13 @@ void CPU::load_game( const std::string& game_path )
         if ( file ) {
                 file.seekg( 0, std::ios::end );
                 //uint64_t length = file.tellg();
-                char buffer[ 3000 ];
+                char buffer[ 4096 - 512 ];
                 file.seekg( 0, std::ios::beg );
-                file.read( &buffer[0], 3000 );
+                file.read( &buffer[0], (4096 - 512) );
                 file.close();
         
         
-        for ( uint64_t counter = 0; counter < 3000; ++counter )
+		for ( uint64_t counter = 0; counter < (4096 - 512); ++counter )
                 memory_[ counter + 512 ] = buffer[ counter ];
         }
 }
@@ -153,6 +153,7 @@ void CPU::load_game( const std::string& game_path )
 void CPU::fetch()
 {
         opcode_ = memory_[ program_counter_ ] << 8 | memory_[ program_counter_ + 1 ];
+	std::cout << static_cast<int>(program_counter_) << ": 0x" << std::hex << opcode_ << std::endl;
         program_counter_ += 2;
 }
 
@@ -191,6 +192,8 @@ void CPU::execute()
       op_FX55();
     else if ( (opcode_ & 0x00FF) == 0x65 )
       op_FX65();
+  } else {
+    std::cout << "\tUnrecognized opcode.";
   }
 }
 
@@ -221,7 +224,9 @@ std::vector<uint8_t> CPU::get_screen()
 
 // Opcodes
 
-void CPU::op_cpu_null() {}
+void CPU::op_cpu_null() {
+  std::cout << "\tCPU_NULL";
+}
 
 void CPU::op_00E0()
 {

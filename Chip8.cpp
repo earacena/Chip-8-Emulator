@@ -20,14 +20,17 @@ Chip8::Chip8(const std::string & game_name)
 
 void Chip8::run()
 {
+  //uint64_t cycle_number = 0;
         while ( display_.is_running() ) {
                 while ( display_.poll_event( event_ ) ) {
                         if ( event_.type == sf::Event::Closed )
                                 display_.close_window();
                 }
-                
+
+		//std::cout << std::dec << "Cycle " << cycle_number << ":" << std::endl << "\t";
                 cpu_.emulate_cycle();
-                
+                //++cycle_number;
+		
                 if ( cpu_.get_draw_status() == 1)
 		  display_.draw_graphics(cpu_.get_screen());
 
