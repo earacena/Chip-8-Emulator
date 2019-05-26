@@ -7,14 +7,25 @@
 
 #include "Chip8.h"
 
-int main()
+int main(int argc, char** argv)
 {
-	// Initialize
-	Chip8 chip8;
-	
-	chip8.run();
-	
-	chip8.clean_up();
-	
-	return EXIT_SUCCESS;
+  if(argc < 2) {
+    std::cout << "Usage: ./Chip8 <Path to ROM>" << std::endl;
+    return 0;
+  }
+
+  const std::string game_name(argv[1]);
+
+  std::cout << "Using ROM directory/file: " << game_name << std::endl;
+  
+  // Initialize
+  Chip8 chip8(game_name);
+  
+  std::cout << "Running..." << std::endl;
+  chip8.run();
+  
+  // chip8.clean_up();
+  
+  
+  return 0;
 }

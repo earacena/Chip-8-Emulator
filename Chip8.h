@@ -16,16 +16,16 @@
 class Chip8 
 {
 public:
-        Chip8();
+  Chip8(const std::string & game_name);
         
-        void run();
+  void run();
         
-        void clean_up();
+  //void clean_up();
         
 private:
-        sf::Event event_;
-        CPU cpu_;
-        Display display_;
+  sf::Event event_;
+  CPU cpu_;
+  Display display_;
         
 };
 

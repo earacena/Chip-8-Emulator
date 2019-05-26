@@ -4,13 +4,17 @@
  *      Description: Implementations for Opcode functions.
  */
 
-void 00E0()
+#include "Opcode.h"
+
+void op_cpu_null() {}
+
+void op_00E0()
 {
   // 0x00E0: Clears the screen
   std::fill( screen_.begin(), screen_.end(), 0);
 }
 
-void 00EE()
+void op_00EE()
 {
   // 0x00EE: Returns from subroutine
   --stack_pointer_;
@@ -19,14 +23,14 @@ void 00EE()
 }
 
 
-void 1NNN()
+void op_1NNN()
 {
   // 0x1NNN: Jumps to address NNN
   program_counter_ = ( opcode_ & 0x0FFF );
 }
 
 
-void 2NNN()
+void op_2NNN()
 {
 	
   // 0x2NNN: Calls subroutine at NNN
@@ -36,7 +40,7 @@ void 2NNN()
   program_counter_ = opcode_ & 0x0FFF;
 }
 
-void 3XNN()
+void Opcode::op_3XNN()
 {
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
         
@@ -47,7 +51,7 @@ void 3XNN()
     program += 2;
 }
 
-void 4XNN()
+void op_4XNN()
 {
   // 0x4XNN: SKip next instruction if VX != NN
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -57,7 +61,7 @@ void 4XNN()
     program += 2;
 }
 
-void 5XY0()
+void op_5XY0()
 {
   // 0x5XY0: Skip next instruction if VX = VY
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -69,7 +73,7 @@ void 5XY0()
     program += 2;
 }
 
-void 6XNN()
+void Opcode::op_6XNN()
 {
   // 0x6XNN: Set VX = NN
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -78,7 +82,7 @@ void 6XNN()
   program_counter_ += 2;
 }
 
-void 7XNN()
+void op_7XNN()
 {
   // 0x7XNN: Set VX = VX + NN
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -87,7 +91,7 @@ void 7XNN()
   program_counter_ += 2;
 }
 
-void 8XY0()
+void op_8XY0()
 {
   // 8XY0: Set VX = VY
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -96,7 +100,7 @@ void 8XY0()
   program_counter_ += 2;
 }
 
-void 8XY1()
+void op_8XY1()
 {
   // 0x8XY1: Set VX = VX OR VY
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -105,7 +109,7 @@ void 8XY1()
   program_counter_ += 2;
 }
 
-void 8XY2()
+void op_8XY2()
 {
   // 0x8XY2: Set VX = VX AND VY
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -114,7 +118,7 @@ void 8XY2()
   program_counter_ += 2;
 }
 
-void 8XY3()
+void op_8XY3()
 {
   // 0x8XY3: Set VX = VX XOR VY
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
@@ -123,7 +127,7 @@ void 8XY3()
   program_counter_ += 2;
 }
 
-void 8XY4()
+void op_8XY4()
 {
   // 0x8XY4: Add the value of register VY to VX
   // Register VF (register 16) set to 1 if carry, otherwise zero.
@@ -146,7 +150,7 @@ void 8XY4()
   program_counter_ += 2;
 }
  
-void 8XY5()
+void op_8XY5()
 {
   // 0x8XY5: Set VX = VX - VY, set VF to carry
   uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
@@ -165,7 +169,7 @@ void 8XY5()
   program_counter_ += 2;
 }
 
-void 8XY6()
+void op_8XY6()
 {
   // Stores the LSB of VX in VF and shifts VX to the right by 1
   uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
@@ -178,7 +182,7 @@ void 8XY6()
   program_counter_ += 2;
 }
 
-void 8XY7()
+void op_8XY7()
 {
   // Sets VX to VY minus VX. VF set to 0 when theres borrow, 1 otherwise
   uint8_t VX = (opcode_ & 0x0F00) >> 8;
@@ -197,7 +201,7 @@ void 8XY7()
   program_counter_ += 2;
 }
 
-void 8XYE()
+void op_8XYE()
 {
   // Stores the MSB of VX in VF and then shifts VX to the left by 1
   uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
@@ -211,7 +215,7 @@ void 8XYE()
 
 }
 
-void 9XY0()
+void op_9XY0()
 {
   // Skips the next instr if VX doesnt equal VY
   uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
@@ -226,20 +230,20 @@ void 9XY0()
     program_counter_ += 2;
 }
 
-void ANNN()
+void op_ANNN()
 {
   // 0xANNN: Sets index register to the address NNN
   index_register_ = opcode_ & 0x0FFF;
   program_counter_ += 2;
 }
 
-void BNNN()
+void op_BNNN()
 {
   // Jumps to address NNN
   program_counter_ = opcode_ & 0x0FFF;
 }
 
-void CXNN()
+void op_CXNN()
 {
   // Sets VX to the result of a bitwise and operation on a random number (0 to 255)
   std::srand(std::time(nullptr));
@@ -253,7 +257,7 @@ void CXNN()
   program_counter_ += 2;
 }
 
-void DXYN()
+void op_DXYN()
 {
   // 0xDXYN: Draws sprite at coordinate VX, VY
   uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
@@ -286,9 +290,9 @@ void DXYN()
   program_counter_ += 2;
 }
 
-void EX9E()
+void op_EX9E()
 {
-  // 0xEX9E: Skips the next instruction
+  // 0xEX9E: Skips the next instruction if the key is stored in VX is pressed
   uint8_t VX = ( opcode_ & 0x0F00 );
   VX = VX >> 8;
         
@@ -298,52 +302,73 @@ void EX9E()
     program_counter_ += 2;
 }
 
-void EXA1()
+void op_EXA1()
 {
-        
+  // Skips the next instructin if the key is stored in VX isnt pressed
+  // ....
 }
 
-void FX07()
+void op_FX07()
 {
-        
+  // Sets VX to the value of the delay timer
+  uint8_t VX = (opcode & 0x0F00) >> 8;
+
+  V_[VX] = delay_timer_;
+  
+  program_counter_ += 2;
 }
 
-void FX0A()
+void op_FX0A()
 {
-        
+  // A key press is awaited, and then stored in VX
 }
 
-void FX15()
+void op_FX15()
 {
-        
+  // Sets the delay timer to VX
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+
+  delay_timer_ = V_[VX];
+
+  program_counter_ += 2;
 }
 
-void FX18()
+void op_FX18()
 {
-        
+  // Sets the sound timer to VX
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+
+  sound_timer_ = V_[VX];
+
+  program_counter_ += 2;
 }
 
-void FX1E()
+void op_FX1E()
 {
-        
+  // Adds VX to I
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+
+  index_register_ += V_[VX];
+
+  program_counter_ += 2;
 }
 
-void FX29()
+void op_FX29()
 {
-        
+  // Sets I to the location of the sprite for the character in VX
 }
 
-void FX33()
+void op_FX33()
 {
-        
+  // Stores the binary-coded decimal representation of VX
 }
 
-void FX55()
+void op_FX55()
 {
-        
+  // Stores V0 to VX in memory starting at address I.
 }
 
-void FX65()
+void op_FX65()
 {
-        
+  // Fills V0 to VX from values from memory starting at address I
 }

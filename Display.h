@@ -14,16 +14,16 @@ class Display
 {
 public:
         void initialize();
-        bool is_running() const;
+        bool is_running();
         bool poll_event( sf::Event& event );
         void set_height( const uint8_t& height );
         void set_width(  const uint8_t& width );
-        uint8_t get_height() const;
-        uint8_t get_width() const;
-        void close_window() const;
-        void clear_screen() const;
+        uint8_t get_height();
+        uint8_t get_width();
+        void close_window();
+        void clear_screen();
         void draw_graphics( const std::vector< uint8_t >& screen );
-        void update_screen() const;
+        void update_screen();
         
 private:
         sf::RenderWindow window_;

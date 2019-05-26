@@ -7,81 +7,82 @@
 
 void Display::initialize()
 {
-        window_.create( sf::VideoMode( screen_X_, screen_Y_ ), "CHIP-8" );
-        window_.setFramerateLimit( 60 );
-        window_.setVerticalSyncEnabled( true );
+  window_.create( sf::VideoMode( screen_X_, screen_Y_ ), "CHIP-8" );
+  window_.setFramerateLimit( 60 );
+  window_.setVerticalSyncEnabled( true );
 }
 
-bool Display::is_running() const
+bool Display::is_running()
 {
-        return window_.isOpen();
+  return window_.isOpen();
 }
 
-bool Display::poll_event( sf::Event& event ) const
+bool Display::poll_event( sf::Event& event )
 {
-        return window_.pollEvent( event );
+  return window_.pollEvent( event );
 }
 
 
 void Display::set_height( const uint8_t& height)
 {
-        height_ = height;
+  screen_Y_ = height;
 }
 
 void Display::set_width( const uint8_t& width )
 {
-        width_ = width;
+  screen_X_ = width;
 }
 
-uint8_t Display::get_height() const
+uint8_t Display::get_height()
 {
-        return screen_X_;
+  return screen_Y_;
 }
 
-uint8_t Display::get_width() const
+uint8_t Display::get_width()
 {
-        return screen_Y_
+  return screen_X_;
 }
 
-void Display::close_window() const
+void Display::close_window()
 {
-        window_.close();
+  window_.close();
 }
 
-void Display::clear_screen() const
+void Display::clear_screen()
 {
-        window_.clear();
+  window_.clear();
 }
 
 void Display::draw_graphics(const std::vector<uint8_t>& screen )
 {
-        uint8_t X_Pos = 0;
-        uint8_t Y_Pos = 0;
-        sf::Vector2i size( 8, 4 );
+  uint8_t X_Pos = 0;
+  uint8_t Y_Pos = 0;
+  sf::Vector2f size( 8, 4 );
         
-        std::vector< sf::IntRect > pixel( 2048);
-        for ( uint16_t counter = 0; counter < 2048; ++counter ) {
-                if ( counter % 64 == 0 ) {
-                        X_Pos = 0;
-                        Y_Pos += 4;
-                }
+  std::vector< sf::RectangleShape > pixel(2048);
+  for ( uint16_t counter = 0; counter < 2048; ++counter ) {
+    if ( counter % 64 == 0 ) {
+      X_Pos = 0;
+      Y_Pos += 4;
+    }
                 
-                if ( screen[ counter ] == 1) {
-                        pixel[ counter ].setOrigin( 0, 0 );
-                        pixel[ counter ].setPosition(X_Pos, Y_pos);
-                        pixel[ counter ].setSize( size );
-                }
-                
-        }
+    if ( screen[ counter ] == 1) {
+      pixel[ counter ].setOrigin( 0, 0 );
+      pixel[ counter ].setPosition(X_Pos, Y_Pos);
+      pixel[ counter ].setSize( size );
+    }
+
+    X_Pos += 4;
+  }
         
-        for ( uint16_t counter = 0; counter < 2048; ++counter )
-                window_.draw( pixel[ counter ] );
+  for ( uint16_t counter = 0; counter < 2048; ++counter )
+    window_.draw( pixel[ counter ] );
 }
 
 
-void Display::update_screen() const
+void Display::update_screen()
 {
-        window_.display();
+  window_.display();
 }
 
 
