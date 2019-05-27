@@ -10,8 +10,8 @@
 //      Constructor
 Chip8::Chip8(const std::string & game_name)
 {
-  display_.set_height( static_cast<uint16_t>(320) );
-  display_.set_width( static_cast<uint16_t>(640) );
+  display_.set_height( 320 );
+  display_.set_width( 640 );
   display_.initialize();
 
 	cpu_.load_game(game_name);	

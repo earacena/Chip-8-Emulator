@@ -161,8 +161,8 @@ void CPU::load_game( const std::string& game_path )
 void CPU::fetch()
 {
         opcode_ = memory_[ program_counter_ ] << 8 | memory_[ program_counter_ + 1 ];
-	//std::cout << static_cast<int>(program_counter_) << ": 0x"
-	//	  << std::uppercase << std::hex << opcode_ << std::endl;
+	std::cout << static_cast<int>(program_counter_) << ": 0x"
+		  << std::uppercase << std::hex << opcode_ << std::endl;
 }
 
 void CPU::execute()

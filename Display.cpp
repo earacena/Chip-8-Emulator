@@ -9,7 +9,7 @@ void Display::initialize()
 {
   window_.create( sf::VideoMode( screen_X_, screen_Y_ ), "CHIP-8" );
   window_.setFramerateLimit( 60 );
-  //  window_.setVerticalSyncEnabled( true );
+  window_.setVerticalSyncEnabled( true );
 }
 
 bool Display::is_running()
@@ -55,28 +55,26 @@ void Display::clear_screen()
 
 void Display::draw_graphics(const std::vector<uint8_t>& screen )
 {
-  uint8_t X_Pos = 0;
-  uint8_t Y_Pos = 0;
+  double X_Pos = 0;
+  double Y_Pos = 0;
+
   sf::Vector2f size( 10, 10 );
         
   std::vector< sf::RectangleShape > pixel(2048);
   for ( uint16_t counter = 0; counter < 2048; ++counter ) {
     if ( counter % 64 == 0 ) {
-      X_Pos = 0;
-      Y_Pos += 10;
+      X_Pos = 0.0;
+      Y_Pos += 10.0;
     }
-                
-    if ( screen[ counter ] == 1) {
-      pixel[ counter ].setOrigin( 0, 0 );
-      pixel[ counter ].setPosition(X_Pos, Y_Pos);
-      pixel[ counter ].setSize( size );
+
+    pixel[ counter ].setPosition(X_Pos, Y_Pos);
+    pixel[ counter ].setSize( size );
+               
+    if ( screen[ counter ] == 1) 
       pixel[ counter ].setFillColor(sf::Color::Red);
-    } // else {
-    //   pixel[ counter ].setOrigin( 0, 0 );
-    //   pixel[ counter ].setPosition(X_Pos, Y_Pos);
-    //   pixel[ counter ].setSize( size );
-    //   pixel[ counter ].setFillColor(sf::Color::Black);
-    // }
+    else 
+      pixel[ counter ].setFillColor(sf::Color::Black);
+    
 
     X_Pos += 10;
   }
@@ -85,7 +83,6 @@ void Display::draw_graphics(const std::vector<uint8_t>& screen )
     window_.draw( pixel[ counter ] );
 
     // Text debug, to confirm correct screen array behavior
-    
     // if(counter % 64 == 0)
     //   std::cout << std::endl;
     // (screen[counter] == 1 ? std::cout << "*" : std::cout << "_");
