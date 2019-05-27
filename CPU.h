@@ -28,7 +28,8 @@ public:
   void emulate_cycle();
   
   uint8_t get_draw_status();
-  std::vector<uint8_t> get_screen();      
+  std::vector<uint8_t> get_screen();
+  
 private:
   // Memory of size 4096 initialized to 0
   std::vector< uint8_t > memory_;
@@ -53,7 +54,6 @@ private:
   std::vector< std::function<void()> > chip8_mathtable_;
   std::vector< std::function<void()> > chip8_calltable_;
   std::vector< std::function<void()> > chip8_skiptable_;
-  std::vector< std::function<void()> > chip8_fxtable_; 
 
   // Special components/registers
   uint8_t delay_timer_;
@@ -65,7 +65,6 @@ private:
   uint16_t opcode_;
 
   // Input/Keypad related
-
   bool is_key_pressed();
   uint8_t key_pressed();
   void update_key_states();
