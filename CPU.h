@@ -59,7 +59,7 @@ private:
   uint8_t delay_timer_;
   uint8_t sound_timer_;
   uint8_t drawflag_;
-  uint8_t index_register_;
+  uint16_t index_register_;
   uint64_t program_counter_;
   uint16_t stack_ptr_;
   uint16_t opcode_;

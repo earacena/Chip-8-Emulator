@@ -6,6 +6,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <iostream>
 #include <cinttypes>
 
 #include <SFML/Graphics.hpp>
@@ -16,8 +17,8 @@ public:
         void initialize();
         bool is_running();
         bool poll_event( sf::Event& event );
-        void set_height( const uint8_t& height );
-        void set_width(  const uint8_t& width );
+        void set_height( const uint16_t& height );
+        void set_width(  const uint16_t& width );
         uint8_t get_height();
         uint8_t get_width();
         void close_window();
@@ -28,8 +29,8 @@ public:
 private:
         sf::RenderWindow window_;
         
-        uint8_t screen_X_;
-        uint8_t screen_Y_;
+        uint16_t screen_X_;
+        uint16_t screen_Y_;
 };
 
 #endif

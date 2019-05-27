@@ -153,8 +153,8 @@ void CPU::load_game( const std::string& game_path )
 void CPU::fetch()
 {
         opcode_ = memory_[ program_counter_ ] << 8 | memory_[ program_counter_ + 1 ];
-	std::cout << static_cast<int>(program_counter_) << ": 0x" << std::hex << opcode_ << std::endl;
-        program_counter_ += 2;
+	//std::cout << static_cast<int>(program_counter_) << ": 0x"
+	//	  << std::uppercase << std::hex << opcode_ << std::endl;
 }
 
 void CPU::execute()
@@ -492,11 +492,11 @@ void CPU::op_DXYN()
   V_[ 0xF ] = 0;
         
   // IF RECEIVEING GRAPHICAL ERROR CHANGE ++yline to yline++
-  for ( uint8_t yline = 0; yline < height; ++yline ) {
+  for ( uint8_t yline = 0; yline < height; yline++ ) {
     pixel = memory_[ index_register_ + yline ];
                 
-    for ( uint8_t xline = 0; xline < 8; ++xline ) {
-      scan = pixel & ( 0x80 >> xline );
+    for ( uint8_t xline = 0; xline < 8; xline++ ) {
+      scan = ( 0x80 >> xline );
       if ( ( pixel & scan ) != 0 ) {
 	pixel_position = value_X + xline + ( ( value_Y + yline ) * 64 );
 	if ( screen_[ pixel_position ]  == 1 )
@@ -523,8 +523,13 @@ void CPU::op_EX9E()
 
 void CPU::op_EXA1()
 {
-  // Skips the next instructin if the key is stored in VX isnt pressed
-  // ....
+  // Skips the next instruction if the key is stored in VX isnt pressed
+  uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
+
+  if( key_[ V_[ VX ] ] == 0 )
+    program_counter_ += 4;
+  else
+    program_counter_ += 2;
 }
 
 void CPU::op_FX07()
@@ -540,6 +545,7 @@ void CPU::op_FX07()
 void CPU::op_FX0A()
 {
   // A key press is awaited, and then stored in VX
+  program_counter_ += 2;
 }
 
 void CPU::op_FX15()
@@ -575,19 +581,47 @@ void CPU::op_FX1E()
 void CPU::op_FX29()
 {
   // Sets I to the location of the sprite for the character in VX
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+  index_register_ = memory_[ V_[VX] * 5 ];
+
+  program_counter_ += 2;
 }
 
+// Used implementation of FX33 by TJA
+// (http://www.multigesture.net/wp-content/uploads/mirror/goldroad/chip8.shtml)
 void CPU::op_FX33()
 {
   // Stores the binary-coded decimal representation of VX
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+  
+  memory_[ index_register_ ] = V_[VX] / 100;
+  memory_[ index_register_+1 ] = (V_[VX] / 10) % 100;
+  memory_[ index_register_+2 ] = (V_[VX] % 100) % 10;
+
+  program_counter_ += 2;
 }
 
 void CPU::op_FX55()
 {
   // Stores V0 to VX in memory starting at address I.
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+  uint8_t offset = 0;
+  
+  for(uint8_t reg = 0x0; reg <= VX; ++reg) {
+    memory_[index_register_+offset] = V_[reg];
+    ++offset;
+  }
+
+  program_counter_ += 2;
 }
 
 void CPU::op_FX65()
 {
   // Fills V0 to VX from values from memory starting at address I
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+
+  for(uint8_t reg = 0x0; reg <= VX; ++reg)
+    V_[reg] = memory_[index_register_+reg];
+
+  program_counter_ += 2;
 }
