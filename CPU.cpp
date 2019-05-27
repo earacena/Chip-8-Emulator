@@ -55,80 +55,88 @@ void CPU::initialize()
 	// Add opcode function calls to appropriate table
 
 	// CPU table
-	chip8_cputable_.push_back([this]{ op_cpu_null(); });
-	chip8_cputable_.push_back([this]{ op_1NNN(); });
-	chip8_cputable_.push_back([this]{ op_2NNN(); });
-	chip8_cputable_.push_back([this]{ op_3XNN(); });
-	chip8_cputable_.push_back([this]{ op_4XNN(); });
-	chip8_cputable_.push_back([this]{ op_5XY0(); });
-	chip8_cputable_.push_back([this]{ op_6XNN(); });
-	chip8_cputable_.push_back([this]{ op_7XNN(); });
-	chip8_cputable_.push_back([this]{ op_cpu_null(); });
-	chip8_cputable_.push_back([this]{ op_cpu_null(); });
-	chip8_cputable_.push_back([this]{ op_ANNN(); });
-	chip8_cputable_.push_back([this]{ op_BNNN(); });
-	chip8_cputable_.push_back([this]{ op_CXNN(); });
-	chip8_cputable_.push_back([this]{ op_DXYN(); });
-	chip8_cputable_.push_back([this]{ op_cpu_null(); });
-	chip8_cputable_.push_back([this]{ op_cpu_null(); });
-	chip8_cputable_.push_back([this]{ op_cpu_null(); });
-
+	chip8_cputable_ = {
+			   [this]{ op_cpu_null(); },
+			   [this]{ op_1NNN(); },
+			   [this]{ op_2NNN(); },
+			   [this]{ op_3XNN(); },
+			   [this]{ op_4XNN(); },
+			   [this]{ op_5XY0(); },
+			   [this]{ op_6XNN(); },
+			   [this]{ op_7XNN(); },
+			   [this]{ op_cpu_null(); },
+			   [this]{ op_cpu_null(); },
+			   [this]{ op_ANNN(); },
+			   [this]{ op_BNNN(); },
+			   [this]{ op_CXNN(); },
+			   [this]{ op_DXYN(); },
+			   [this]{ op_cpu_null(); },
+			   [this]{ op_cpu_null(); },
+			   [this]{ op_cpu_null(); }
+	};
+	
 
 	// CPU Math opcodes
-        chip8_mathtable_.push_back([this]{ op_8XY0(); });
-	chip8_mathtable_.push_back([this]{ op_8XY1(); });
-	chip8_mathtable_.push_back([this]{ op_8XY2(); });
-	chip8_mathtable_.push_back([this]{ op_8XY3(); });
-	chip8_mathtable_.push_back([this]{ op_8XY4(); });
-	chip8_mathtable_.push_back([this]{ op_8XY5(); });
-	chip8_mathtable_.push_back([this]{ op_8XY6(); });
-	chip8_mathtable_.push_back([this]{ op_8XY7(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-	chip8_mathtable_.push_back([this]{ op_8XYE(); });
-	chip8_mathtable_.push_back([this]{ op_cpu_null(); });
-
+	chip8_mathtable_ = {
+			    [this]{ op_8XY0(); },
+			    [this]{ op_8XY1(); },
+			    [this]{ op_8XY2(); },
+			    [this]{ op_8XY3(); },
+			    [this]{ op_8XY4(); },
+			    [this]{ op_8XY5(); },
+			    [this]{ op_8XY6(); },
+			    [this]{ op_8XY7(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },			     
+			    [this]{ op_cpu_null(); },			     
+			    [this]{ op_8XYE(); },	
+			    [this]{ op_cpu_null(); }
+	};
+	
 	// CPU call table opcodes
-        chip8_calltable_.push_back([this]{ op_00E0(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
-	chip8_calltable_.push_back([this]{ op_00EE(); });
-	chip8_calltable_.push_back([this]{ op_cpu_null(); });
 
+	chip8_calltable_ = {
+			    [this]{ op_00E0(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_00EE(); },
+			    [this]{ op_cpu_null(); }
+	};
 
 	// CPU skip table
-        chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_EXA1(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_9XY0(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	chip8_skiptable_.push_back([this]{ op_EX9E(); });
-	chip8_skiptable_.push_back([this]{ op_cpu_null(); });
-	 
+	chip8_skiptable_ = {
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_EXA1(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_9XY0(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_cpu_null(); },
+			    [this]{ op_EX9E(); },
+			    [this]{ op_cpu_null(); },
+
+	};
 }
 
 void CPU::load_game( const std::string& game_path )
@@ -284,10 +292,10 @@ void CPU::op_4XNN()
 void CPU::op_5XY0()
 {
   // 0x5XY0: Skip next instruction if VX = VY
-  uint8_t value_X = ( opcode_ & 0x0F00 ) >> 8;
-  uint8_t value_Y = ( opcode_ & 0x00F0 ) >> 4;
+  uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
+  uint8_t VY = ( opcode_ & 0x00F0 ) >> 4;
         
-  if ( V_[ value_X ] == V_[ value_Y ] )
+  if ( V_[ VX ] == V_[ VY ] )
     program_counter_ += 4;
   else
     program_counter_ += 2;
@@ -343,7 +351,9 @@ void CPU::op_8XY3()
   // 0x8XY3: Set VX = VX XOR VY
   uint8_t X = ( opcode_ & 0x0F00 ) >> 8;
   uint8_t Y = ( opcode_ & 0x00F0 ) >> 4;
+  
   V_[ X ] ^= V_[ Y ];
+  
   program_counter_ += 2;
 }
 
@@ -379,13 +389,13 @@ void CPU::op_8XY5()
   uint8_t value_Y = V_[VY];
   uint8_t value_X = V_[VX];
 
+  V_[VX] = value_X - value_Y;
+  
   if (value_Y > value_X)
     V_[0xF] = 1;
   else
     V_[0xF] = 0;
 
-  V_[VX] -= value_Y;
-  
   program_counter_ += 2;
 }
 
@@ -411,12 +421,12 @@ void CPU::op_8XY7()
   uint8_t value_Y = V_[VY];
   uint8_t value_X = V_[VX];
 
+  V_[VX] = value_Y - value_X;
+  
   if (value_X > value_Y)
     V_[0xF] = 1;
   else
     V_[0xF] = 0;
-
-  V_[VY] -= value_X;
 
   program_counter_ += 2;
 }
@@ -479,7 +489,12 @@ void CPU::op_CXNN()
 
 void CPU::op_DXYN()
 {
-  // 0xDXYN: Draws sprite at coordinate VX, VY
+  // Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
+  // Each row of 8 pixels is read as bit-coded starting from memory location I;
+  //   I value doesn’t change after the execution of this instruction.
+  // As described above, VF is set to 1 if any screen pixels are flipped from set to
+  // unset when the sprite is drawn, and to 0 if that doesn’t happen 
+  // 
   uint8_t VX = ( opcode_ & 0x0F00 ) >> 8;
   uint8_t VY = ( opcode_ & 0x00F0 ) >> 4;
   uint16_t value_X = V_[ VX ];
@@ -491,21 +506,21 @@ void CPU::op_DXYN()
         
   V_[ 0xF ] = 0;
         
-  // IF RECEIVEING GRAPHICAL ERROR CHANGE ++yline to yline++
+  //IF RECEIVEING GRAPHICAL ERROR CHANGE ++yline to yline++
   for ( uint8_t yline = 0; yline < height; yline++ ) {
     pixel = memory_[ index_register_ + yline ];
                 
     for ( uint8_t xline = 0; xline < 8; xline++ ) {
       scan = ( 0x80 >> xline );
       if ( ( pixel & scan ) != 0 ) {
-	pixel_position = value_X + xline + ( ( value_Y + yline ) * 64 );
-	if ( screen_[ pixel_position ]  == 1 )
-	  V_[ 0xF ] = 1;
-	screen_[ pixel_position ] ^= 1;
+  	pixel_position = value_X + xline + ( ( value_Y + yline ) * 64 );
+  	if ( screen_[ pixel_position ]  == 1 )
+  	  V_[ 0xF ] = 1;
+  	screen_[ pixel_position ] ^= 1;
       }
     }
   }
-        
+
   drawflag_ = 1;
   program_counter_ += 2;
 }

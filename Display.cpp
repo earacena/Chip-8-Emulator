@@ -9,7 +9,7 @@ void Display::initialize()
 {
   window_.create( sf::VideoMode( screen_X_, screen_Y_ ), "CHIP-8" );
   window_.setFramerateLimit( 60 );
-  window_.setVerticalSyncEnabled( true );
+  //  window_.setVerticalSyncEnabled( true );
 }
 
 bool Display::is_running()
