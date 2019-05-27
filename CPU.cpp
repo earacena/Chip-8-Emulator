@@ -207,6 +207,7 @@ void CPU::execute()
 
 void CPU::emulate_cycle()
 {
+  update_key_states();
         fetch();
         execute();
         
@@ -229,6 +230,90 @@ std::vector<uint8_t> CPU::get_screen()
   return screen_;
 }
 
+// INPUT, 0x0 -> 0xF
+// Handle the actual keys pressed using SFML
+// KEYPAD(array mapped locations):
+// [1][2][3][C]
+// [4][5][6][D]
+// [7][8][9][E]
+// [A][0][B][F]
+//
+// ACTUAL KEYS USED:
+// [1][2][3][4]
+// [Q][W][E][R]
+// [A][S][D][F]
+// [Z][X][C][V]
+bool CPU::is_key_pressed()
+{
+  return (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::Num3) ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::Num4) ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::Q)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::W)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::E)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::R)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::A)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::S)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::D)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::F)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::Z)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::X)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::C)    ||
+	  sf::Keyboard::isKeyPressed(sf::Keyboard::V));	  
+}
+
+uint8_t CPU::key_pressed()
+{
+  uint8_t key_position = 0x00;
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+    key_position = 0x01;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+    key_position = 0x02;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+    key_position = 0x03;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+    key_position = 0x0C;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    key_position = 0x04;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    key_position = 0x05;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    key_position = 0x06;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+    key_position = 0x0D;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    key_position = 0x07;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    key_position = 0x08;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    key_position = 0x09;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+    key_position = 0x0E;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+    key_position = 0x0A;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+    key_position = 0x00;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+    key_position = 0x0B;
+  else if ( sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+    key_position = 0x0F;
+
+  return key_position;
+}
+
+
+void CPU::update_key_states()
+{
+  // Set all key states to 0 in order to get proper states
+  // Using this design, only one key can be pressed and updated every cycle
+  for (uint8_t i = 0; i < 16; ++i)
+    key_[i] = 0;
+  
+  if(is_key_pressed())
+    key_[key_pressed()] = 1; 
+}
 
 // Opcodes
 
@@ -560,6 +645,17 @@ void CPU::op_FX07()
 void CPU::op_FX0A()
 {
   // A key press is awaited, and then stored in VX
+  uint8_t VX = (opcode_ & 0x0F00) >> 8;
+
+  // Wait for key press
+  while (!is_key_pressed())
+    continue;
+
+  // Store key press
+  uint8_t key_press = key_pressed();
+  key_[key_press] = 1;
+  V_[VX] = key_press;
+  
   program_counter_ += 2;
 }
 

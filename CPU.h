@@ -15,6 +15,8 @@
 #include <ctime>
 #include <iostream>
 
+#include <SFML/Window.hpp>
+
 class CPU
 {
 public:
@@ -46,16 +48,14 @@ private:
   // Fontset
   std::vector< uint8_t > fontset_;
 
+  // Opcode tables
   std::vector< std::function<void()> > chip8_cputable_;
-        
   std::vector< std::function<void()> > chip8_mathtable_;
-        
   std::vector< std::function<void()> > chip8_calltable_;
-        
   std::vector< std::function<void()> > chip8_skiptable_;
-        
   std::vector< std::function<void()> > chip8_fxtable_; 
-        
+
+  // Special components/registers
   uint8_t delay_timer_;
   uint8_t sound_timer_;
   uint8_t drawflag_;
@@ -64,6 +64,12 @@ private:
   uint16_t stack_ptr_;
   uint16_t opcode_;
 
+  // Input/Keypad related
+
+  bool is_key_pressed();
+  uint8_t key_pressed();
+  void update_key_states();
+  
   // Opcodes
   // Null, function table padding
   void op_cpu_null();
@@ -103,8 +109,6 @@ private:
   void op_FX33();  // Stores the binary-coded decimal representation of VX.
   void op_FX55();  // Stores V0 to VX in memory starting at address I
   void op_FX65();  // Fills V0 to VX from values from memory starting at address I
-
-  
 };
 
 #endif
