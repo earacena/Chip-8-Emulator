@@ -9,9 +9,10 @@ Description:
 
 Platforms:
 	Linux 32/64-bit distributions
-
+		
 Dependencies:
-
+	g++ (compiler)
+	make (for the Makefile)
 	SFML 2.5.0 (and up) for window and 2D rendering functions.
 
 Build Instructions:
@@ -26,3 +27,8 @@ Run instructions (using ROM as the name of file):
 Clean up:
       To remove all .o and compiled executables, type:
             make clean
+
+
+Issues:
+	* Out-of-bounds segmentation fault found while testing PONG ROM,
+	  detected whenever player paddle passes screen bounds.
