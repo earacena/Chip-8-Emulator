@@ -1,0 +1,28 @@
+Name:		Emanuel Aracena
+Project:	CHIP-8 Emulator
+Date Started:   September 9, 2018
+
+Description:
+	A simple emulation of the CHIP-8 interpreted language written in C++.
+	Used Multigesture.net guide for CHIP-8 Emulation and its resources for guidance.
+	Tested with "PONG" game from David Winter's www.pong-story.com/chip8/
+
+Platforms:
+	Linux 32/64-bit distributions
+
+Dependencies:
+
+	SFML 2.5.0 (and up) for window and 2D rendering functions.
+
+Build Instructions:
+      To build, type:
+            make clean	
+      	    make
+
+Run instructions (using ROM as the name of file):
+    To run with selected ROM, type:
+        ./Chip8 ROM
+
+Clean up:
+      To remove all .o and compiled executables, type:
+            make clean
