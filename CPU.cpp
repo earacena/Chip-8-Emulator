@@ -14,155 +14,155 @@ CPU::CPU()
 
 void CPU::initialize()
 {
-        // Initialize variables
-        program_counter_ = static_cast< uint64_t >( 0x200 );
-        opcode_          = 0;
-        index_register_  = 0;
-        stack_ptr_       = 0;
-        delay_timer_     = 0;
-        sound_timer_     = 0;
+  // Initialize variables
+  program_counter_ = static_cast< uint64_t >( 0x200 );
+  opcode_          = 0;
+  index_register_  = 0;
+  stack_ptr_       = 0;
+  delay_timer_     = 0;
+  sound_timer_     = 0;
         
-        // Initialize vectors
-        memory_.resize( 4096, 0);
-        V_.resize( 16, 0);
-        screen_.resize( 2048, 0);
-        key_.resize( 16, 0 );
-        stack_.resize( 16, 0 );
+  // Initialize vectors
+  memory_.resize( 4096, 0);
+  V_.resize( 16, 0);
+  screen_.resize( 2048, 0);
+  key_.resize( 16, 0 );
+  stack_.resize( 16, 0 );
         
-        fontset_ = {
-                0xF0, 0x90, 0x90, 0x90, 0xF0,	// 0
-                0x20, 0x60, 0x20, 0x20, 0x70, 	// 1
-                0xF0, 0x10, 0xF0, 0x80, 0xF0, 	// 2
-                0xF0, 0x10, 0xF0, 0x10, 0xF0, 	// 3
-                0x90, 0x90, 0xF0, 0x10, 0x10, 	// 4
-                0xF0, 0x80, 0xF0, 0x10, 0xF0, 	// 5
-                0xF0, 0x80, 0xF0, 0x90, 0xF0, 	// 6
-                0xF0, 0x10, 0x20, 0x40, 0x40, 	// 7
-                0xF0, 0x90, 0xF0, 0x90, 0xF0, 	// 8
-                0xF0, 0x90, 0xF0, 0x10, 0xF0, 	// 9
-                0xF0, 0x90, 0xF0, 0x90, 0x90, 	// A
-                0xE0, 0x90, 0xE0, 0x90, 0xE0, 	// B
-                0xF0, 0x80, 0x80, 0x80, 0xF0, 	// C
-                0xE0, 0x90, 0x90, 0x90, 0xE0, 	// D
-                0xF0, 0x80, 0xF0, 0x80, 0xF0, 	// E
-                0xF0, 0x80, 0xF0, 0x80, 0x80  	// F
-        };
+  fontset_ = {
+    0xF0, 0x90, 0x90, 0x90, 0xF0,	// 0
+    0x20, 0x60, 0x20, 0x20, 0x70, 	// 1
+    0xF0, 0x10, 0xF0, 0x80, 0xF0, 	// 2
+    0xF0, 0x10, 0xF0, 0x10, 0xF0, 	// 3
+    0x90, 0x90, 0xF0, 0x10, 0x10, 	// 4
+    0xF0, 0x80, 0xF0, 0x10, 0xF0, 	// 5
+    0xF0, 0x80, 0xF0, 0x90, 0xF0, 	// 6
+    0xF0, 0x10, 0x20, 0x40, 0x40, 	// 7
+    0xF0, 0x90, 0xF0, 0x90, 0xF0, 	// 8
+    0xF0, 0x90, 0xF0, 0x10, 0xF0, 	// 9
+    0xF0, 0x90, 0xF0, 0x90, 0x90, 	// A
+    0xE0, 0x90, 0xE0, 0x90, 0xE0, 	// B
+    0xF0, 0x80, 0x80, 0x80, 0xF0, 	// C
+    0xE0, 0x90, 0x90, 0x90, 0xE0, 	// D
+    0xF0, 0x80, 0xF0, 0x80, 0xF0, 	// E
+    0xF0, 0x80, 0xF0, 0x80, 0x80  	// F
+  };
         
-        // Load fontset into memeory, 80 is default size of 80
-        for ( uint8_t index = 0; index < 80; ++index )
-                memory_[ index ] = fontset_[ index ];
+  // Load fontset into memeory, 80 is default size of 80
+  for ( uint8_t index = 0; index < 80; ++index )
+    memory_[ index ] = fontset_[ index ];
 
-	// Add opcode function calls to appropriate table
+  // Add opcode function calls to appropriate table
 
-	// CPU table
-	chip8_cputable_ = {
-			   [this]{ op_cpu_null(); },
-			   [this]{ op_1NNN(); },
-			   [this]{ op_2NNN(); },
-			   [this]{ op_3XNN(); },
-			   [this]{ op_4XNN(); },
-			   [this]{ op_5XY0(); },
-			   [this]{ op_6XNN(); },
-			   [this]{ op_7XNN(); },
-			   [this]{ op_cpu_null(); },
-			   [this]{ op_cpu_null(); },
-			   [this]{ op_ANNN(); },
-			   [this]{ op_BNNN(); },
-			   [this]{ op_CXNN(); },
-			   [this]{ op_DXYN(); },
-			   [this]{ op_cpu_null(); },
-			   [this]{ op_cpu_null(); },
-			   [this]{ op_cpu_null(); }
-	};
+  // CPU table
+  chip8_cputable_ = {
+    [this]{ op_cpu_null(); },
+    [this]{ op_1NNN(); },
+    [this]{ op_2NNN(); },
+    [this]{ op_3XNN(); },
+    [this]{ op_4XNN(); },
+    [this]{ op_5XY0(); },
+    [this]{ op_6XNN(); },
+    [this]{ op_7XNN(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_ANNN(); },
+    [this]{ op_BNNN(); },
+    [this]{ op_CXNN(); },
+    [this]{ op_DXYN(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); }
+  };
 	
 
-	// CPU Math opcodes
-	chip8_mathtable_ = {
-			    [this]{ op_8XY0(); },
-			    [this]{ op_8XY1(); },
-			    [this]{ op_8XY2(); },
-			    [this]{ op_8XY3(); },
-			    [this]{ op_8XY4(); },
-			    [this]{ op_8XY5(); },
-			    [this]{ op_8XY6(); },
-			    [this]{ op_8XY7(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },			     
-			    [this]{ op_cpu_null(); },			     
-			    [this]{ op_8XYE(); },	
-			    [this]{ op_cpu_null(); }
-	};
+  // CPU Math opcodes
+  chip8_mathtable_ = {
+    [this]{ op_8XY0(); },
+    [this]{ op_8XY1(); },
+    [this]{ op_8XY2(); },
+    [this]{ op_8XY3(); },
+    [this]{ op_8XY4(); },
+    [this]{ op_8XY5(); },
+    [this]{ op_8XY6(); },
+    [this]{ op_8XY7(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },			     
+    [this]{ op_cpu_null(); },			     
+    [this]{ op_8XYE(); },	
+    [this]{ op_cpu_null(); }
+  };
 	
-	// CPU call table opcodes
+  // CPU call table opcodes
 
-	chip8_calltable_ = {
-			    [this]{ op_00E0(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_00EE(); },
-			    [this]{ op_cpu_null(); }
-	};
+  chip8_calltable_ = {
+    [this]{ op_00E0(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_00EE(); },
+    [this]{ op_cpu_null(); }
+  };
 
-	// CPU skip table
-	chip8_skiptable_ = {
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_EXA1(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_9XY0(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_cpu_null(); },
-			    [this]{ op_EX9E(); },
-			    [this]{ op_cpu_null(); },
+  // CPU skip table
+  chip8_skiptable_ = {
+    [this]{ op_cpu_null(); },
+    [this]{ op_EXA1(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_9XY0(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_cpu_null(); },
+    [this]{ op_EX9E(); },
+    [this]{ op_cpu_null(); },
 
-	};
+  };
 }
 
 void CPU::load_game( const std::string& game_path )
 {
-        std::ifstream file( game_path, std::ios::binary );
+  std::ifstream file( game_path, std::ios::binary );
                 
-        if ( file ) {
-                file.seekg( 0, std::ios::end );
-                //uint64_t length = file.tellg();
-                char buffer[ 4096 - 512 ];
-                file.seekg( 0, std::ios::beg );
-                file.read( &buffer[0], (4096 - 512) );
-                file.close();
+  if ( file ) {
+    file.seekg( 0, std::ios::end );
+    //uint64_t length = file.tellg();
+    char buffer[ 4096 - 512 ];
+    file.seekg( 0, std::ios::beg );
+    file.read( &buffer[0], (4096 - 512) );
+    file.close();
         
         
-		for ( uint64_t counter = 0; counter < (4096 - 512); ++counter )
-                memory_[ counter + 512 ] = buffer[ counter ];
-        }
+    for ( uint64_t counter = 0; counter < (4096 - 512); ++counter )
+      memory_[ counter + 512 ] = buffer[ counter ];
+  }
 }
 
 
 void CPU::fetch()
 {
-        opcode_ = memory_[ program_counter_ ] << 8 | memory_[ program_counter_ + 1 ];
-	std::cout << static_cast<int>(program_counter_) << ": 0x"
-		  << std::uppercase << std::hex << opcode_ << std::endl;
+  opcode_ = memory_[ program_counter_ ] << 8 | memory_[ program_counter_ + 1 ];
+  std::cout << static_cast<int>(program_counter_) << ": 0x"
+            << std::uppercase << std::hex << opcode_ << std::endl;
 }
 
 void CPU::execute()
