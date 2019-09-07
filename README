@@ -4,7 +4,7 @@ Date Started:   September 9, 2018
 
 Description:
 	A simple emulation of the CHIP-8 interpreted language written in C++.
-	Used Multigesture.net guide for CHIP-8 Emulation and its resources for guidance.
+	Used Cowgod's technical reference [1] for opcode implementations.
 	Tested with "PONG" game from David Winter's www.pong-story.com/chip8/
 
 Platforms:
@@ -32,3 +32,7 @@ Clean up:
 Issues:
 	* Out-of-bounds segmentation fault found while testing PONG ROM,
 	  detected whenever player paddle passes screen bounds.
+	 
+	 
+References:
+	[1] https://web.archive.org/web/20130401182240/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.0
