@@ -1,6 +1,6 @@
 /*
  * 	Filename: 	Chip8.h
- * 	Author: 	Emanuel Aracena <earacenadev@gmail.com>
+ * 	Author: 	Emanuel Aracena Beriguete 
  * 	Description:	Chip8 class interface.
  */
 

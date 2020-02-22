@@ -1,6 +1,6 @@
 /*      
  *      Filename:    CPU.cpp
- *      Author:      Emanuel Aracena <earacenadev@gmail.com>
+ *      Author:      Emanuel Aracena Beriguete
  *      Description: Interface of CPU class.
  */
 #ifndef CPU_H

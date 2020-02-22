@@ -1,5 +1,5 @@
 /*      Filename:       Display.h
- *      Author:         Emanuel Aracena <earacenadev@gmail.com>
+ *      Author:         Emanuel Aracena Beriguete
  *      Description:    Implementation of Display sclass.
  */
 

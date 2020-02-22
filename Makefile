@@ -1,8 +1,8 @@
 ###########################################################
-# 	Makefile for Chip-8 Emulator			  #
-# 	Name: 		Emanuel Aracena			  #
-#	Date created:	May 25, 2019			  #
-#	Description:	Makefile for Linux executable.	  #
+# 	Makefile for Chip-8 Emulator                          #
+# 	Name: 		Emanuel Aracena Beriguete                   #
+#	Date created:	May 25, 2019                              #
+#	Description:	Makefile for Linux executable.            #
 ###########################################################
 
 # Flags

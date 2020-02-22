@@ -1,6 +1,6 @@
 /*
  * 	Filename: 	Chip8.cpp
- * 	Author: 	Emanuel Aracena <earacenadev@gmail.com>
+ * 	Author: 	Emanuel Aracena Beriguete
  * 	Description:	Implementation for Chip8 class.
  */
 

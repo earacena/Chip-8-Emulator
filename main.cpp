@@ -1,6 +1,6 @@
 /*
  * 	Filename: 	main.cpp
- * 	Author: 	Emanuel Aracena <earacenadev@gmail.com>
+ * 	Author: 	Emanuel Aracena Beriguete
  * 	Description:	CHIP-8 Emulator
  */
 #include <iostream>
