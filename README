@@ -24,6 +24,12 @@ Run instructions (using ROM as the name of file):
     To run with selected ROM, type:
         ./Chip8 ROM
 
+Controls:
+    [1][2][3][4]
+    [Q][W][E][R]
+    [A][S][D][F]
+    [Z][X][C][V]
+    
 Clean up:
       To remove all .o and compiled executables, type:
             make clean
