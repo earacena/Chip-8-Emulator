@@ -23,14 +23,14 @@ void CPU::initialize()
   sound_timer_     = 0;
         
   // Initialize vectors
-  memory_.resize( 4096, 0);
-  V_.resize( 16, 0);
-  screen_.resize( 2048, 0);
-  key_.resize( 16, 0 );
-  stack_.resize( 16, 0 );
+  memory_.resize(4096, 0);
+  V_.resize(16, 0);
+  screen_.resize(2048, 0);
+  key_.resize(16, 0);
+  stack_.resize(16, 0);
         
   fontset_ = {
-    0xF0, 0x90, 0x90, 0x90, 0xF0,	// 0
+    0xF0, 0x90, 0x90, 0x90, 0xF0,   // 0
     0x20, 0x60, 0x20, 0x20, 0x70, 	// 1
     0xF0, 0x10, 0xF0, 0x80, 0xF0, 	// 2
     0xF0, 0x10, 0xF0, 0x10, 0xF0, 	// 3
@@ -56,86 +56,84 @@ void CPU::initialize()
 
   // CPU table
   chip8_cputable_ = {
-    [this]{ op_cpu_null(); },
-    [this]{ op_1NNN(); },
-    [this]{ op_2NNN(); },
-    [this]{ op_3XNN(); },
-    [this]{ op_4XNN(); },
-    [this]{ op_5XY0(); },
-    [this]{ op_6XNN(); },
-    [this]{ op_7XNN(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_ANNN(); },
-    [this]{ op_BNNN(); },
-    [this]{ op_CXNN(); },
-    [this]{ op_DXYN(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); }
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_1NNN, this),
+    std::bind(&CPU::op_2NNN, this),
+    std::bind(&CPU::op_3XNN, this),
+    std::bind(&CPU::op_4XNN, this),
+    std::bind(&CPU::op_5XY0, this),
+    std::bind(&CPU::op_6XNN, this),
+    std::bind(&CPU::op_7XNN, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_ANNN, this),
+    std::bind(&CPU::op_BNNN, this),
+    std::bind(&CPU::op_CXNN, this),
+    std::bind(&CPU::op_DXYN, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
   };
 	
 
   // CPU Math opcodes
   chip8_mathtable_ = {
-    [this]{ op_8XY0(); },
-    [this]{ op_8XY1(); },
-    [this]{ op_8XY2(); },
-    [this]{ op_8XY3(); },
-    [this]{ op_8XY4(); },
-    [this]{ op_8XY5(); },
-    [this]{ op_8XY6(); },
-    [this]{ op_8XY7(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },			     
-    [this]{ op_cpu_null(); },			     
-    [this]{ op_8XYE(); },	
-    [this]{ op_cpu_null(); }
+    std::bind(&CPU::op_8XY0, this),
+    std::bind(&CPU::op_8XY1, this),
+    std::bind(&CPU::op_8XY2, this),
+    std::bind(&CPU::op_8XY3, this),
+    std::bind(&CPU::op_8XY4, this),
+    std::bind(&CPU::op_8XY5, this),
+    std::bind(&CPU::op_8XY6, this),
+    std::bind(&CPU::op_8XY7, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_8XYE, this),
+    std::bind(&CPU::op_cpu_null, this),
   };
 	
   // CPU call table opcodes
-
   chip8_calltable_ = {
-    [this]{ op_00E0(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_00EE(); },
-    [this]{ op_cpu_null(); }
+    std::bind(&CPU::op_00E0, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_00EE, this),
+    std::bind(&CPU::op_cpu_null, this),
   };
 
   // CPU skip table
   chip8_skiptable_ = {
-    [this]{ op_cpu_null(); },
-    [this]{ op_EXA1(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_9XY0(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_cpu_null(); },
-    [this]{ op_EX9E(); },
-    [this]{ op_cpu_null(); },
-
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_EXA1, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_9XY0, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_cpu_null, this),
+    std::bind(&CPU::op_EX9E, this),
+    std::bind(&CPU::op_cpu_null, this),
   };
 }
 
@@ -168,6 +166,7 @@ void CPU::fetch()
 void CPU::execute()
 {
   uint8_t MSB_id = (opcode_ & 0xF000) >> 12;
+
   if ( MSB_id == 0x0) {
     chip8_calltable_[opcode_ & 0x000F ]();
   } else if ( ((MSB_id >= 1) && (MSB_id <= 7)) || ((MSB_id >= 0xA) && (MSB_id <= 0xD))) {
