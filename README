@@ -1,44 +1,46 @@
-Name:		Emanuel Aracena Beriguete
-Project:	CHIP-8 Emulator
-Date Started:   September 9, 2018
+# CHIP-8 Emulator
 
-Description:
-	A simple emulation of the CHIP-8 interpreted language written in C++.
-	Used Cowgod's technical reference [1] for opcode implementations.
-	Tested with "PONG" game from David Winter's www.pong-story.com/chip8/
+A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgod's technical reference [1] for opcode implementations. Tested with "PONG" game from David Winter's www.pong-story.com/chip8/
 
-Platforms:
-	Linux 32/64-bit distributions
-		
-Dependencies:
-	g++ (compiler)
-	make (for the Makefile)
-	SFML 2.5.0 (and up) for window and 2D rendering functions.
-
-Build Instructions:
-      To build, type:
-            make clean	
-      	    make
-
-Run instructions (using ROM as the name of file):
-    To run with selected ROM, type:
-        ./Chip8 ROM
-
-Controls:
+### Controls
+```
     [1][2][3][4]
     [Q][W][E][R]
     [A][S][D][F]
     [Z][X][C][V]
-    
-Clean up:
-      To remove all .o and compiled executables, type:
-            make clean
+```
+
+## Suppoted Platforms
+	Linux 32/64-bit distributions
+		
+## Dependencies
+	* g++ (compiler)
+	* make (for the Makefile)
+	* SFML 2.5.0 (and up) for window and 2D rendering functions.
+
+## Build 
+To build, type:
+```
+make clean
+make
+```
+## Run
+To run with selected ROM, type:
+```
+./Chip8 [ROM filepath]
+```
+
+### Clean up
+To remove all .o and compiled executables, type:
+```
+make clean
+```
 
 
-Issues:
+## Known Issues
 	* Out-of-bounds segmentation fault found while testing PONG ROM,
 	  detected whenever player paddle passes screen bounds.
 	 
 	 
-References:
+## References
 	[1] https://web.archive.org/web/20130401182240/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.0
