@@ -25,12 +25,17 @@ public:
   void load_game( const std::string& game_path );
   void fetch();
   void execute();
-  void emulate_cycle(const SDL_Event & e);
+  void emulate_cycle();
   
   uint8_t get_draw_status();
   std::vector<uint8_t> get_screen();
+  void sync_event(SDL_Event & e);
+
+  void update_key_states();
   
 private:
+  SDL_Event event_;
+
   // Memory of size 4096 initialized to 0
   std::vector< uint8_t > memory_;
         
@@ -65,12 +70,11 @@ private:
   uint16_t opcode_;
 
   // Input/Keypad related
-  bool is_key_pressed(const SDL_Event & e);
-  uint8_t key_pressed(const SDL_Event & e);
-  void update_key_states(const SDL_Event & e);
-
   bool is_key_pressed_;
   uint8_t key_pressed_;
+  uint8_t get_key_pressed();
+  //void update_key_states(SDL_Event & e);
+
   std::unordered_map<SDL_Keycode, uint8_t> keys_map_;
   
   // Opcodes

@@ -54,22 +54,22 @@ void CPU::initialize()
 
   // Initialize keys
   keys_map_ = {
-    {SDLK_1, 0x01},
-    {SDLK_2, 0x02},
-    {SDLK_3, 0x03},
-    {SDLK_4, 0x0C},
-    {SDLK_q, 0x04},
-    {SDLK_w, 0x05},
-    {SDLK_e, 0x06},
-    {SDLK_r, 0x0D},
-    {SDLK_a, 0x07},
-    {SDLK_s, 0x08},
-    {SDLK_d, 0x09},
-    {SDLK_f, 0x0E},
-    {SDLK_z, 0x0A},
-    {SDLK_x, 0x00},
-    {SDLK_c, 0x0B},
-    {SDLK_v, 0x0F},
+    {SDLK_KP_0, 0x00},
+    {SDLK_KP_1, 0x01},
+    {SDLK_KP_2, 0x02},
+    {SDLK_KP_3, 0x03},
+    {SDLK_KP_4, 0x04},
+    {SDLK_KP_5, 0x05},
+    {SDLK_KP_6, 0x06},
+    {SDLK_KP_7, 0x07},
+    {SDLK_KP_8, 0x08},
+    {SDLK_KP_9, 0x09},
+    {SDLK_q, 0x0A},
+    {SDLK_w, 0x0B},
+    {SDLK_e, 0x0C},
+    {SDLK_a, 0x0D},
+    {SDLK_s, 0x0E},
+    {SDLK_d, 0x0F},
   };
 
   // Add opcode function calls to appropriate table
@@ -223,19 +223,23 @@ void CPU::execute()
   }
 }
 
-void CPU::emulate_cycle(const SDL_Event & e)
+void CPU::emulate_cycle()
 {
-  update_key_states(e);
+  // update_key_states(e);
   fetch();
   execute();
-  
+
   if ( delay_timer_ > 0 )
-          --delay_timer_;
+    --delay_timer_;
   
   if ( sound_timer_ > 0 ) {
-          if ( sound_timer_ == 1)
-                  std::cout << "BEEP!";
+    if ( sound_timer_ == 1)
+      std::cout << "BEEP!";
   }
+
+  // Reset input flags
+  is_key_pressed_ = false;
+  key_pressed_ = 0xFF;
 }
 
 uint8_t CPU::get_draw_status()
@@ -261,33 +265,43 @@ std::vector<uint8_t> CPU::get_screen()
 // [Q][W][E][R]
 // [A][S][D][F]
 // [Z][X][C][V]
-bool CPU::is_key_pressed(const SDL_Event & e)
-{
-  is_key_pressed_ = (e.type == SDL_KEYDOWN);
-  return e.type == SDL_KEYDOWN;
-}
 
-uint8_t CPU::key_pressed(const SDL_Event & e)
+// bool CPU::is_key_event()
+// {
+//   is_key_pressed_ = (event_.type == SDL_KEYDOWN);
+//   std::cout << "is_key_pressed: " << is_key_pressed_ << std::endl;
+//   return event_.type == SDL_KEYDOWN;
+// }
+
+uint8_t CPU::get_key_pressed()
 {
   // Check if key pressed is in stored in key mapping
-  uint8_t key = keys_map_.contains(e.key.keysym.sym) ? keys_map_.at(e.key.keysym.sym) : 0x00;
-  key_pressed_ = key;
-  return key;
+  return keys_map_.contains(event_.key.keysym.sym) ? keys_map_.at(event_.key.keysym.sym) : 0xFF;
 }
 
-void CPU::update_key_states(const SDL_Event & e)
+void CPU::update_key_states()
 {
   // Set all key states to 0 in order to get proper states
   // Using this design, only one key can be pressed and updated every cycle
   for (uint8_t i = 0; i < 16; ++i)
     key_[i] = 0;
   
-  if(is_key_pressed(e))
-    key_[key_pressed(e)] = 1; 
+  if (event_.type == SDL_KEYDOWN) {
+    std::cout << "KEYDOWN" << std::endl;
+    uint8_t key = get_key_pressed();
+    if (key != 0xFF) {
+      is_key_pressed_ = true;
+      key_pressed_ = get_key_pressed();
+      key_[key_pressed_] = 1;
+    }
+  }
+}
+
+void CPU::sync_event(SDL_Event & e) {
+  event_ = e;
 }
 
 // Opcodes
-
 void CPU::op_cpu_null() {
   std::cout << "\tCPU_NULL";
 }
@@ -296,6 +310,7 @@ void CPU::op_00E0()
 {
   // 0x00E0: Clears the screen
   std::fill( screen_.begin(), screen_.end(), 0);
+  program_counter_ += 2;
 }
 
 void CPU::op_00EE()
@@ -618,15 +633,19 @@ void CPU::op_FX0A()
   // A key press is awaited, and then stored in VX
   uint8_t VX = (opcode_ & 0x0F00) >> 8;
 
-  // Wait for key press
-  while (is_key_pressed_)
-    continue;
+  // Wait for key press, return to event polling loop
+  if (!is_key_pressed_) {
+    std::cout << "WAITING FOR INPUT" << std::endl;
+    return;
+  }
 
-  // Store key press
-  key_[key_pressed_] = 1;
-  V_[VX] = key_pressed_;
-  
-  program_counter_ += 2;
+  // Store key press if valid
+  uint8_t key = key_pressed_;
+  if (key != 0xFF) {
+    key_[key] = 1;
+    V_[VX] = key;
+    program_counter_ += 2;
+  }
 }
 
 void CPU::op_FX15()
