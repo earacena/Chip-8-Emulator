@@ -7,7 +7,7 @@
 
 # Flags
 CPP_FLAG = -g -std=c++20 -Wall -Wextra -pedantic
-EXEC_DIR = ./build/
+EXEC_DIR = ./build
 
 # Rule for .cpp files
 # .SUFFIXES: .cpp.o
@@ -36,10 +36,10 @@ $(PROGRAM_0): $(OBJ_0)
 
 # Compile all
 all:
-	make $(PROGRAM_0)
+	(make $(PROGRAM_0); mv src/*.o build;)
 
 run:
 	./$(PROGRAM_0)
 
 clean:
-	(rm -f *.o; rm -f $(PROGRAM_0);)
+	(rm -f src/*.o; rm -f $(PROGRAM_0);)
