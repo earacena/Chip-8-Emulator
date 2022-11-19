@@ -133,8 +133,8 @@ void Display::draw_graphics(const std::vector<uint8_t> & screen)
     else 
       SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 0); // Black
 
-      // Fill in rectangle
-      SDL_RenderFillRect(renderer_, &pixel.at(counter));
+    // Fill in rectangle
+    SDL_RenderFillRect(renderer_, &pixel.at(counter));
 
     //window_.draw( pixel[ counter ] );
 
