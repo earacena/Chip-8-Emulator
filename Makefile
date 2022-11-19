@@ -6,8 +6,8 @@
 ###########################################################
 
 # Flags
-CPP_FLAG = -g -std=c++11 -Wall -Wextra -pedantic
-EXEC_DIR = .
+CPP_FLAG = -g -std=c++20 -Wall -Wextra -pedantic
+EXEC_DIR = ./build/
 
 # Rule for .cpp files
 # .SUFFIXES: .cpp.o
@@ -16,16 +16,19 @@ EXEC_DIR = .
 	g++ $(CPP_FLAG) $(INCLUDE) -c $< -o $@
 
 # Include libraries
-INCLUDE = -I.
+INCLUDE = -I/usr/include/SDL2
 
 # SFML libraries
-SFML_LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+# SFML_LIBS = -lsfml-graphics -lsfml-window -lsfml-system
+
+# SDL libraries
+SDL_LIBS = -lSDL2
 
 # Libraries
-LIBS = -L/usr/lib -L/usr/local/lib $(SFML_LIBS)
+LIBS = -L/usr/lib -L/usr/local/lib $(SDL_LIBS)
 
 # Optimal multiplications
-OBJ_0 = main.o Chip8.o CPU.o Display.o
+OBJ_0 = src/main.o src/Chip8.o src/CPU.o src/Display.o
 PROGRAM_0 = Chip8
 $(PROGRAM_0): $(OBJ_0)
 	g++ $(CPP_FLAG) -o $(EXEC_DIR)/$@ $(OBJ_0) $(INCLUDE) $(LIBS)
