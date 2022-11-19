@@ -28,7 +28,7 @@ void Chip8::run()
     }
 
     //std::cout << std::dec << "Cycle " << cycle_number << ":" << std::endl << "\t";
-    cpu_.emulate_cycle();
+    cpu_.emulate_cycle(event_);
     //++cycle_number;
 	       
     display_.clear_screen();
