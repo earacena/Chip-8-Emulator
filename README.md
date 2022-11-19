@@ -1,10 +1,10 @@
 # CHIP-8 Emulator
 
-A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgod's technical reference [1] for opcode implementations. Tested with "PONG" game from David Winter's www.pong-story.com/chip8/
+A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgod's technical reference [1] for opcode implementations.
 
 ### Controls (case-sensitive)
 
-```
+```text
     [1][2][3][4]
     [Q][W][E][R]
     [A][S][D][F]
@@ -18,9 +18,8 @@ A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgo
 ## Dependencies
 
 * g++ (compiler)
-
-* make (for the Makefile)
-* SFML 2.5.0 (and up) for window and 2D rendering functions.
+* make
+* SDL 2.42.2
 
 ## Build
 
@@ -28,7 +27,7 @@ To build, type:
 
 ```bash
 make clean
-make
+make all
 ```
 
 ## Run
