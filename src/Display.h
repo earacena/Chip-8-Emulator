@@ -19,14 +19,14 @@ class Display
 public:
   int initialize();
   bool is_running();
-  int poll_event( SDL_Event event );
-  void set_height( const uint16_t& height );
-  void set_width(  const uint16_t& width );
+  void set_height(const uint16_t & height );
+  void set_width(const uint16_t & width );
+  int poll_event(SDL_Event & event);
   uint8_t get_height();
   uint8_t get_width();
   void close();
   void clear_screen();
-  void draw_graphics( const std::vector<uint8_t>& screen );
+  void draw_graphics(const std::vector<uint8_t>& screen);
   void update_screen();
         
 private:

@@ -51,6 +51,8 @@ int Display::initialize()
   // window_.create( sf::VideoMode( screen_X_, screen_Y_ ), "CHIP-8" );
   // window_.setFramerateLimit( 60 );
   // window_.setVerticalSyncEnabled( true );
+
+  return 1;
 }
 
 bool Display::is_running()
@@ -58,11 +60,10 @@ bool Display::is_running()
   return running_;
 }
 
-int Display::poll_event( SDL_Event event )
+int Display::poll_event( SDL_Event & event )
 {
   return SDL_PollEvent( &event );
 }
-
 
 void Display::set_height( const uint16_t & height)
 {
