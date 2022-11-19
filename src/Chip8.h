@@ -9,6 +9,7 @@
 
 #include <string>
 #include <cinttypes>
+#include <SDL.h>
 
 #include "CPU.h"
 #include "Display.h"
@@ -23,7 +24,7 @@ public:
   //void clean_up();
         
 private:
-  sf::Event event_;
+  SDL_Event event_;
   CPU cpu_;
   Display display_;
         

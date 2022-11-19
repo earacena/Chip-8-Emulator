@@ -22,9 +22,9 @@ void Chip8::run()
 {
   //uint64_t cycle_number = 0;
   while ( display_.is_running() ) {
-    while ( display_.poll_event( event_ ) ) {
-      if ( event_.type == sf::Event::Closed )
-        display_.close_window();
+    while ( display_.poll_event( event_ ) != 0) {
+      if ( event_.type == SDL_QUIT )
+        display_.close();
     }
 
     //std::cout << std::dec << "Cycle " << cycle_number << ":" << std::endl << "\t";
