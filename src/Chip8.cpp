@@ -23,12 +23,15 @@ void Chip8::run()
   //uint64_t cycle_number = 0;
   while ( display_.is_running() ) {
     while ( display_.poll_event( event_ ) != 0) {
+      cpu_.sync_event(event_);
       if ( event_.type == SDL_QUIT )
         display_.close();
+      else if (event_.type == SDL_KEYDOWN)
+        cpu_.update_key_states();
     }
 
     //std::cout << std::dec << "Cycle " << cycle_number << ":" << std::endl << "\t";
-    cpu_.emulate_cycle(event_);
+    cpu_.emulate_cycle();
     //++cycle_number;
 	       
     display_.clear_screen();
@@ -37,5 +40,8 @@ void Chip8::run()
 		  display_.draw_graphics(cpu_.get_screen());
 
     display_.update_screen();
+
+    // Sleep to slow down emulation
+    std::this_thread::sleep_for(std::chrono::milliseconds(2));
   }
 }

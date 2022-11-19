@@ -10,6 +10,8 @@
 #include <string>
 #include <cinttypes>
 #include <SDL.h>
+#include <chrono>
+#include <thread>
 
 #include "CPU.h"
 #include "Display.h"
@@ -18,16 +20,12 @@ class Chip8
 {
 public:
   Chip8(const std::string & game_name);
-        
   void run();
-        
-  //void clean_up();
-        
+
 private:
   SDL_Event event_;
   CPU cpu_;
   Display display_;
-        
 };
 
 #endif
