@@ -19,13 +19,11 @@ int main(int argc, char** argv)
   std::cout << "Using ROM directory/file: " << game_name << std::endl;
   
   // Initialize
-  Chip8 chip8(game_name);
-  
-  std::cout << "Running..." << std::endl;
-  chip8.run();
-  
-  // chip8.clean_up();
-  
-  
-  return 0;
+  try {
+    Chip8 chip8(game_name);
+    Debugger debugger;
+    chip8.run(&debugger);
+  } catch (const std::string & e) {
+    std::cerr << e << std::endl;
+  }
 }
