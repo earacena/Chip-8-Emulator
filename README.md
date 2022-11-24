@@ -2,7 +2,7 @@
 
 A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgod's technical reference [1] for opcode implementations.
 
-### Controls (case-sensitive)
+## Controls (case-sensitive)
 
 ```text
     [1][2][3][4]
@@ -17,17 +17,20 @@ A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgo
   
 ## Dependencies
 
-* g++ (compiler)
-* make
-* SDL 2.42.2
+* g++
+* cmake
+* SDL2 (2.42.2)
+* fmtlib
 
 ## Build
 
-To build, type:
+To build:
 
 ```bash
-make clean
-make all
+mkdir build
+cd build
+cmake ..
+cmake --build .
 ```
 
 ## Run
@@ -35,12 +38,12 @@ make all
 To run with selected ROM, type:
 
 ```bash
-./Chip8 [ROM filepath]
+./chip8 [ROM filepath]
 ```
 
 ### Clean up
 
-To remove all .o and compiled executables, type:
+To remove all .o and compiled executables, enter the following in ```build/```:
 
 ```bash
 make clean
