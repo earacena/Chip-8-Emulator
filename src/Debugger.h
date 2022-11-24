@@ -13,17 +13,25 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 
-#include "Chip8.h"
+// fmt
+#include <fmt/core.h>
+
+#include "CPU.h"
 
 class Debugger {
 public:
-  Debugger(Chip8 * chip8) : emulator(chip8) {}
-
-  void initialize_debugger();
-  void run_emulator();
+  Debugger();
+  void start_frame();
+  void place_widgets();
+  void render(CPU * cpu);
+  void cleanup();
 
 private:
-  Chip8 * emulator;
+
+  const char * glsl_version_ = "#version 130";
+  SDL_Window * window_;
+  SDL_GLContext gl_context_;
+  ImGuiIO * io_;
 };
 
 #endif
