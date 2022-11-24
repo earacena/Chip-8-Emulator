@@ -14,34 +14,42 @@ Chip8::Chip8(const std::string & game_name)
   display_.set_width( 640 );
   display_.initialize();
 
-  cpu_.load_game(game_name);	
+  cpu_.load_game(game_name);
   cpu_.initialize();
 }
 
-void Chip8::run()
+void Chip8::run(Debugger * debugger = nullptr)
 {
-  //uint64_t cycle_number = 0;
   while ( display_.is_running() ) {
     while ( display_.poll_event( event_ ) != 0) {
       cpu_.sync_event(event_);
-      if ( event_.type == SDL_QUIT )
-        display_.close();
-      else if (event_.type == SDL_KEYDOWN)
+      if ( event_.type == SDL_QUIT ) {
+        cleanup();
+        if (debugger != nullptr) 
+          debugger->cleanup();
+      } else if (event_.type == SDL_KEYUP) {
         cpu_.update_key_states();
+      }
     }
 
-    //std::cout << std::dec << "Cycle " << cycle_number << ":" << std::endl << "\t";
     cpu_.emulate_cycle();
-    //++cycle_number;
-	       
-    display_.clear_screen();
-		
-    if ( cpu_.get_draw_status() == 1)
-		  display_.draw_graphics(cpu_.get_screen());
 
+    // Draw changes on screen
+    display_.clear_screen();
+    if ( cpu_.get_draw_status() == 1)
+      display_.draw_graphics(cpu_.get_screen());
     display_.update_screen();
 
+    // Render and update debugger window
+    if (debugger != nullptr)
+      debugger->render();
+
     // Sleep to slow down emulation
-    std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(2));
   }
+  
+}
+
+void Chip8::cleanup() {
+  display_.close();
 }

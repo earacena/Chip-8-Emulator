@@ -13,6 +13,7 @@
 #include <chrono>
 #include <thread>
 
+#include "Debugger.h"
 #include "CPU.h"
 #include "Display.h"
 
@@ -20,7 +21,8 @@ class Chip8
 {
 public:
   Chip8(const std::string & game_name);
-  void run();
+  void run(Debugger * debugger);
+  void cleanup();
 
 private:
   SDL_Event event_;
