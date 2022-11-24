@@ -584,10 +584,14 @@ void CPU::op_DXYN()
     for ( uint8_t xline = 0; xline < 8; xline++ ) {
       scan = ( 0x80 >> xline );
       if ( ( pixel & scan ) != 0 ) {
-  	pixel_position = value_X + xline + ( ( value_Y + yline ) * 64 );
-  	if ( screen_[ pixel_position ]  == 1 )
-  	  V_[ 0xF ] = 1;
-  	screen_[ pixel_position ] ^= 1;
+  	    pixel_position = value_X + xline + ( ( value_Y + yline ) * 64 );
+  	    
+        if ( screen_[ pixel_position ]  == 1 ) {
+  	      V_[ 0xF ] = 1;
+        }
+      	
+        screen_[ pixel_position ] ^= 1;
+      
       }
     }
   }
