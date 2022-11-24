@@ -5,13 +5,11 @@
 
 #include "Display.h"
 
-int Display::initialize()
+void Display::initialize()
 {
   // Initialize SDL
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    std::cerr << "SDL failed to initialize: " << SDL_GetError() << std::endl;
-    return -1;
-  }
+  if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    throw std::string(fmt::format("Failed to initialize SDL: {}", SDL_GetError()));
 
   // Create window
   window_ = SDL_CreateWindow(
@@ -23,36 +21,13 @@ int Display::initialize()
     SDL_WINDOW_SHOWN
   );
 
-  if (window_ == nullptr) {
-    std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
-    return -1;
-  }
+  if (window_ == nullptr) 
+     throw std::string(fmt::format("Failed to create window: {}", SDL_GetError()));
 
   // Create renderer
   renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
-  if (renderer_ == nullptr) {
-    std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
-    return -1;
-  }
-
-  // SDL_FillRect(
-  //   screen_surface_,
-  //   nullptr,
-  //   SDL_MapRGB(
-  //     screen_surface_->format,
-  //     0xFF,
-  //     0xFF,
-  //     0xFF
-  //   )
-  // );
-
-  // SDL_UpdateWindowSurface(window_);
-
-  // window_.create( sf::VideoMode( screen_X_, screen_Y_ ), "CHIP-8" );
-  // window_.setFramerateLimit( 60 );
-  // window_.setVerticalSyncEnabled( true );
-
-  return 1;
+  if (renderer_ == nullptr) 
+    throw std::string(fmt::format("Failed to create renderer: {}", SDL_GetError()));
 }
 
 bool Display::is_running()

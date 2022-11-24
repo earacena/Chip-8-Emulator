@@ -11,13 +11,14 @@
 #include <vector>
 #include <memory>
 
-// #include <SFML/Graphics.hpp>
 #include <SDL.h>
+
+#include <fmt/core.h>
 
 class Display 
 {
 public:
-  int initialize();
+  void initialize();
   bool is_running();
   void set_height(const uint16_t & height );
   void set_width(const uint16_t & width );
