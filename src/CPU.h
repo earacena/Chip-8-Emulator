@@ -21,59 +21,52 @@ class CPU
 {
 public:
   CPU();
-  void initialize();
   void load_game( const std::string& game_path );
   void fetch();
   void execute();
   void emulate_cycle();
-  
-  uint8_t get_draw_status();
-  std::vector<uint8_t> get_screen();
-  void sync_event(SDL_Event & e);
+  void update_key_states(const SDL_Event & event);
 
-  void update_key_states();
-  
-private:
-  SDL_Event event_;
-
+  // CPU Components
   // Memory of size 4096 initialized to 0
-  std::vector< uint8_t > memory_;
+  std::vector< uint8_t > memory;
         
   // V[x] registers
-  std::vector< uint8_t > V_;
+  std::vector< uint8_t > V;
         
   // Display of 64x32 size
-  std::vector< uint8_t > screen_;
+  std::vector< uint8_t > screen;
         
   // Keypad (0x0 to 0xF)
-  std::vector< uint8_t > key_;
+  std::vector< uint8_t > key;
         
   // Memory stack
-  std::vector< uint16_t > stack_;
+  std::vector< uint16_t > stack;
         
   // Fontset
-  std::vector< uint8_t > fontset_;
+  std::vector< uint8_t > fontset;
 
+  // Special components/registers
+  uint8_t delay_timer;
+  uint8_t sound_timer;
+  uint8_t draw_flag;
+  uint16_t index_register;
+  uint64_t program_counter;
+  uint16_t stack_ptr;
+  uint16_t opcode;
+
+  // Input/Keypad related
+  bool is_key_pressed;
+  uint8_t key_pressed;
+  uint8_t get_key_pressed(const SDL_Event & event);
+  //void update_key_states(SDL_Event & e);
+
+private:
   // Opcode tables
   std::vector< std::function<void()> > chip8_cputable_;
   std::vector< std::function<void()> > chip8_mathtable_;
   std::vector< std::function<void()> > chip8_calltable_;
   std::vector< std::function<void()> > chip8_skiptable_;
-
-  // Special components/registers
-  uint8_t delay_timer_;
-  uint8_t sound_timer_;
-  uint8_t drawflag_;
-  uint16_t index_register_;
-  uint64_t program_counter_;
-  uint16_t stack_ptr_;
-  uint16_t opcode_;
-
-  // Input/Keypad related
-  bool is_key_pressed_;
-  uint8_t key_pressed_;
-  uint8_t get_key_pressed();
-  //void update_key_states(SDL_Event & e);
 
   std::unordered_map<SDL_Keycode, uint8_t> keys_map_;
   
