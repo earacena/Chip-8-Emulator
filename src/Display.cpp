@@ -35,9 +35,9 @@ bool Display::is_running()
   return running_;
 }
 
-int Display::poll_event( SDL_Event & event )
+bool Display::poll_event( SDL_Event & event )
 {
-  return SDL_PollEvent( &event );
+  return SDL_PollEvent( &event ) != 0;
 }
 
 void Display::set_height( const uint16_t & height)

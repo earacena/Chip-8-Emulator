@@ -22,7 +22,7 @@ public:
   bool is_running();
   void set_height(const uint16_t & height );
   void set_width(const uint16_t & width );
-  int poll_event(SDL_Event & event);
+  bool poll_event(SDL_Event & event);
   uint8_t get_height();
   uint8_t get_width();
   void close();
