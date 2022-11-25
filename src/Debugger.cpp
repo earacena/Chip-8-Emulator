@@ -37,11 +37,13 @@ Debugger::Debugger() {
   ImGui_ImplOpenGL3_Init(glsl_version_);
 }
 
-void Debugger::place_widgets() {
+void Debugger::place_widgets(CPU * cpu) {
   ImGui::Begin("Debugger");
-  ImGui::Text("Testing text");
-  if (ImGui::Button("Press Me"))
-    ImGui::Text("Pressed");
+
+  for (uint8_t i = 0; i < cpu->V.size(); ++i) {
+    ImGui::Text(fmt::format("V{}: {}", i, cpu->V.at(i)).c_str());
+  }
+
   ImGui::End();
 }
 
@@ -51,7 +53,7 @@ void Debugger::render(CPU * cpu) {
   ImGui_ImplSDL2_NewFrame();
   ImGui::NewFrame();
 
-  place_widgets();
+  place_widgets(cpu);
 
   ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImGui::Render();

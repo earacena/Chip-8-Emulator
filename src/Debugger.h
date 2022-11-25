@@ -22,7 +22,7 @@ class Debugger {
 public:
   Debugger();
   void start_frame();
-  void place_widgets();
+  void place_widgets(CPU * cpu);
   void render(CPU * cpu);
   void cleanup();
 
