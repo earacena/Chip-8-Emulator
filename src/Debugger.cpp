@@ -96,11 +96,11 @@ std::string Debugger::disassemble(uint16_t opcode) {
   uint8_t MSB_id = (opcode & 0xF000) >> 12;
 
   if (MSB_id == 0x0) {
-    switch (opcode & 0x000F) {
-      case 0x0:
+    switch (opcode & 0x00FF) {
+      case 0xE0:
         // 0x00E0
         return "CLS";
-      case 0xE:
+      case 0xEE:
         // 0x00EE
         return "RET";
       default:
