@@ -40,9 +40,22 @@ Debugger::Debugger() {
 void Debugger::place_widgets(CPU * cpu) {
   ImGui::Begin("Debugger");
 
+  // Display registers
   for (uint8_t i = 0; i < cpu->V.size(); ++i) {
-    ImGui::Text(fmt::format("V{}: {}", i, cpu->V.at(i)).c_str());
+    ImGui::Text(fmt::format("V{}: {:#x}", i, cpu->V.at(i)).c_str());
   }
+
+  // Display memory
+  ImGui::Separator();
+  ImGui::TextColored(ImVec4(1, 1, 0, 1), "Memory");
+  ImGui::BeginChild("Scrolling");
+  for (uint16_t i = 0; i < cpu->memory.size(); ++i) {
+    if (i == cpu->program_counter)
+      ImGui::Selectable(fmt::format("{:#x}: {:#x}", i, cpu->memory.at(i)).c_str(), true);
+    else
+      ImGui::Text(fmt::format("{:#x}: {:#x}", i, cpu->memory.at(i)).c_str());
+  }
+  ImGui::EndChild();
 
   ImGui::End();
 }
