@@ -128,4 +128,7 @@ void Display::update_screen()
   SDL_RenderPresent(renderer_);
 }
 
-
+Uint32 Display::get_window_id()
+{
+  return SDL_GetWindowID(window_);
+}

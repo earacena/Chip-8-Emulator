@@ -29,6 +29,7 @@ public:
   void clear_screen();
   void draw_graphics(const std::vector<uint8_t>& screen);
   void update_screen();
+  Uint32 get_window_id();
         
 private:
   // sf::RenderWindow window_;
