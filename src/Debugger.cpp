@@ -52,10 +52,10 @@ void Debugger::place_widgets(CPU* cpu) {
       for (uint8_t i = 0; i < 16; i += 2) {
         ImGui::TableNextRow();
         ImGui::TableSetColumnIndex(0);
-        ImGui::Text(fmt::format("V{}: {:#x}", i, cpu->V.at(i)).c_str());
+        ImGui::Text(fmt::format("V{:X}: {:#x}", i, cpu->V.at(i)).c_str());
 
         ImGui::TableSetColumnIndex(1);
-        ImGui::Text(fmt::format("V{}: {:#x}", i+1, cpu->V.at(i+1)).c_str());
+        ImGui::Text(fmt::format("V{:X}: {:#x}", i+1, cpu->V.at(i+1)).c_str());
       }
 
       ImGui::TableNextRow();
@@ -180,37 +180,37 @@ std::string Debugger::disassemble(uint16_t opcode) {
     switch (MSB_id) {
       case 0x1:
         // 0x1NNN
-        return "JP addr";
+        return fmt::format("JP {:#x}", opcode & 0x0FFF);
       case 0x2:
         // 0x2NNN
-        return "CALL adrr";
+        return fmt::format("CALL {:#x}", opcode & 0x0FFF);
       case 0x3:
         // 0x3XNN
-        return "SE Vx, byte";
+        return fmt::format("SE V{:X}, {:#x}", (opcode & 0x0F00) >> 8, opcode & 0x00FF);
       case 0x4:
         // 0x4XNN
-        return "SNE Vx, byte";
+        return fmt::format("SNE V{:X}, {:#x}", (opcode & 0x0F00)>> 8, opcode & 0x00FF);
       case 0x5:
         // 0x5XY0
-        return "SE Vx, Vy";
+        return fmt::format("SE V{:X}, V{:X}", (opcode & 0x0F00) >> 8, opcode & 0x00F0 >> 4);
       case 0x6:
         // 0x6XNN
-        return "LD Vx, byte";
+        return fmt::format("LD V{:X}, {:#x}", (opcode & 0x0F00) >> 8, opcode & 0x00FF);
       case 0x7:
         // 0x7XNN
-        return "ADD Vx, byte";
+        return fmt::format("ADD V{:X}, {:#x}", (opcode & 0x0F00) >> 8, opcode & 0x00FF);
       case 0xA:
         // 0xANNN
-        return "LD I, addr";
+        return fmt::format("LD I, {:#x}", opcode & 0x0FFF);
       case 0xB:
         // 0xBNNN
-        return "JP V0, addr";
+        return fmt::format("JP V0, {:#x}", opcode & 0x0FFF);
       case 0xC:
         // 0xCXNN
-        return "RND Vx, byte";
+        return fmt::format("RND V{:X}, {:#x}", (opcode & 0x0F00) >> 8, opcode & 0x00FF);
       case 0xD:
         // 0xDXYN
-        return "DRAW Vx, Vy, nibble";
+        return fmt::format("DRAW V{:X}, V{:X}, {:#x}", (opcode & 0x0F00) >> 8, opcode & 0x00F0 >> 4, opcode & 0x000F);
       default:
         // NULL
         return "-";
@@ -219,31 +219,31 @@ std::string Debugger::disassemble(uint16_t opcode) {
     switch (opcode & 0x000F) {
       case 0x0:
         // 0x8XY0
-        return "LD Vx, Vy";
+        return fmt::format("LD V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x1:
         // 0x8XY1
-        return "OR Vx, Vy";
+        return fmt::format("OR V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x2:
         // 0x8XY2
-        return "AND Vx, Vy";
+        return fmt::format("AND V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x3:
         // 0x8XY3
-        return "XOR Vx, Vy";
+        return fmt::format("XOR V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x4:
         // 0x8XY4
-        return "ADD Vx, Vy";
+        return fmt::format("ADD V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x5:
         // 0x8XY5
-        return "SUB Vx, Vy";
+        return fmt::format("SUB V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x6:
         // 0x8XY6
-        return "SHR Vx {, Vy}";
+        return fmt::format("SHR V{:X} {{, V{:X} }}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0x7:
         // 0x8XY7
-        return "SUBN Vx, Vy";
+        return fmt::format("SUBN V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       case 0xE:
         // 0x8XYE
-        return "SHL Vx, {, Vy}";
+        return fmt::format("SHL V{:X} {{, V{:X} }}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
       default:
         // NULL
         return "-";
@@ -253,47 +253,47 @@ std::string Debugger::disassemble(uint16_t opcode) {
       switch (opcode & 0x000F) {
         case 0x1:
           // 0xEXA1
-          return "SKNP Vx";
+          return fmt::format("SKNP V{:X}", (opcode & 0x0F00) >> 12);
         case 0xE:
           // 0xEX9E
-          return "SKP Vx";
+          return fmt::format("SKP V{:X}", (opcode & 0x0F00) >> 12);
         default:
           // null
           return "-";
       }
     } else {
       // 9XY0
-      return "SNE Vx, Vy";
+      return fmt::format("SNE V{:X}, V{:X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4);
     }
   } else if (MSB_id == 0xF) {
     switch (opcode & 0x00FF) {
       case 0x07:
         // 0xFX07
-        return "LD Vx, DT";
+        return fmt::format("LD V{:X}, DT", (opcode & 0x0F00) >> 8);
       case 0x0A:
         // 0xFX0A
-        return "LD Vx, K";
+        return fmt::format("LD V{:X}, K", (opcode & 0x0F00) >> 8);
       case 0x15:
         // 0xFX15
-        return "LD DT, Vx";
+        return fmt::format("LD DT, V{:X}", (opcode & 0x0F00) >> 8);
       case 0x18:
         // 0xFX18
-        return "LD ST, Vx";
+        return fmt::format("LD ST, V{:X}", (opcode & 0x0F00) >> 8);
       case 0x1E:
         // 0xFX1E
-        return "ADD I, Vx";
+        return fmt::format("ADD I, V{:X}", (opcode & 0x0F00) >> 8);
       case 0x29:
         // 0xFX29
-        return "LD F, Vx";
+        return fmt::format("LD F, V{:X}", (opcode & 0x0F00) >> 8);
       case 0x33:
         // 0xFX33
-        return "LD B, Vx";
+        return fmt::format("LD B, V{:X}", (opcode & 0x0F00) >> 8);
       case 0x55:
         // 0xFX55
-        return "LD [I], Vx";
+        return fmt::format("LD [I], V{:X}", (opcode & 0x0F00) >> 8);
       case 0x65:
         // 0xFX65
-        return "LD Vx, [I]";
+        return fmt::format("LD V{:X}, [I]", (opcode & 0x0F00) >> 8);
       default:
         // NULL
         return "-";
