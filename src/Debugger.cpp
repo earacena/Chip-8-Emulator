@@ -93,13 +93,13 @@ void Debugger::place_widgets(CPU* cpu) {
   // Display memory
   if (ImGui::CollapsingHeader("Memory")) {
     ImGui::BeginChild("Scrolling");
-    if (ImGui::BeginTable("memory_table", 3))
+    if (ImGui::BeginTable("memory_table", 3, ImGuiTableFlags_SizingFixedFit))
     {
       ImGui::TableNextRow();
       ImGui::TableSetColumnIndex(0);
       ImGui::Text("Address");
       ImGui::TableSetColumnIndex(1);
-      ImGui::Text("Opcode");
+      ImGui::Text("Value");
       ImGui::TableSetColumnIndex(2);
       ImGui::Text("Disassembled Opcode");
 
