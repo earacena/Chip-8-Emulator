@@ -13,7 +13,7 @@ Debugger::Debugger() {
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
   SDL_WindowFlags window_flags = static_cast<SDL_WindowFlags>(
-      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+      SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
   window_ = SDL_CreateWindow("CHIP-8 Debugger", SDL_WINDOWPOS_CENTERED,
                              SDL_WINDOWPOS_CENTERED, 600, 900, window_flags);
   if (window_ == nullptr)
@@ -39,10 +39,12 @@ Debugger::Debugger() {
   // Setup renderer backends
   ImGui_ImplSDL2_InitForOpenGL(window_, gl_context_);
   ImGui_ImplOpenGL3_Init(glsl_version_);
+
+  ImGui::SetNextWindowSize(ImVec2(600, 900), ImGuiCond_FirstUseEver);
 }
 
 void Debugger::place_widgets(CPU* cpu) {
-  ImGui::Begin("Debugger");
+  ImGui::Begin("Debugger", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
   // Display registers
   if (ImGui::CollapsingHeader("Registers")) {
