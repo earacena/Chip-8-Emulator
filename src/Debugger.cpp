@@ -46,30 +46,96 @@ void Debugger::place_widgets(CPU* cpu) {
 
   // Display registers
   if (ImGui::CollapsingHeader("Registers")) {
-    for (uint8_t i = 0; i < cpu->V.size(); ++i) {
-      ImGui::Text(fmt::format("V{}: {:#x}", i, cpu->V.at(i)).c_str());
+    if (ImGui::BeginTable("register_table", 2)) {
+      for (uint8_t i = 0; i < 16; i += 2) {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+        ImGui::Text(fmt::format("V{}: {:#x}", i, cpu->V.at(i)).c_str());
+
+        ImGui::TableSetColumnIndex(1);
+        ImGui::Text(fmt::format("V{}: {:#x}", i+1, cpu->V.at(i+1)).c_str());
+      }
+
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Separator();
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Separator();
+
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text(fmt::format("delay timer: {:#x}", cpu->delay_timer).c_str());
+
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text(fmt::format("sound timer: {:#x}", cpu->sound_timer).c_str());
+
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text(fmt::format("draw flag: {:#x}", cpu->draw_flag).c_str());
+
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text(fmt::format("I: {:#x}", cpu->index_register).c_str());
+
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text(fmt::format("PC: {:#x}", cpu->program_counter).c_str());
+
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text(fmt::format("SP: {:#x}", cpu->stack_ptr).c_str());
+
+      ImGui::EndTable();
     }
+
   }
 
   // Display memory
   if (ImGui::CollapsingHeader("Memory")) {
-    ImGui::TextColored(ImVec4(1, 1, 0, 1), "Memory");
     ImGui::BeginChild("Scrolling");
-    for (uint16_t i = 0; i < cpu->memory.size() - 1; i += 2) {
-      if (i == cpu->program_counter)
-        ImGui::Selectable(
-            fmt::format("{:#x}: {:#x}\t{}", i,
-                        (cpu->memory.at(i) << 8) | cpu->memory.at(i + 1), disassemble((cpu->memory.at(i) << 8) | cpu->memory.at(i + 1)))
-                .c_str(),
-            true);
-      else
-        ImGui::Text(
-            fmt::format("{:#x}: {:#x}\t{}", i,
-                        (cpu->memory.at(i) << 8) | cpu->memory.at(i + 1), disassemble((cpu->memory.at(i) << 8) | cpu->memory.at(i + 1)))
-                .c_str());
+    if (ImGui::BeginTable("memory_table", 3))
+    {
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Address");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("Opcode");
+      ImGui::TableSetColumnIndex(2);
+      ImGui::Text("Disassembled Opcode");
+
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Separator();
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Separator();
+      ImGui::TableSetColumnIndex(2);
+      ImGui::Separator();
+
+      uint16_t opcode;
+      std::string disassembled;
+      for (uint16_t i = 0; i < cpu->memory.size() - 1; i += 2) {
+        ImGui::TableNextRow();
+        opcode = (cpu->memory.at(i) << 8) | cpu->memory.at(i + 1);
+        disassembled = disassemble(opcode);
+        if (i == cpu->program_counter) {
+          ImGui::TableSetColumnIndex(0);
+          ImGui::Selectable(fmt::format("{:#x}", i).c_str(), true);
+          ImGui::TableSetColumnIndex(1);
+          ImGui::Selectable(fmt::format("{:#x}", opcode).c_str(), true);
+          ImGui::TableSetColumnIndex(2);
+          ImGui::Selectable(fmt::format("{}", disassembled).c_str(), true);
+        } else {
+          ImGui::TableSetColumnIndex(0);
+          ImGui::Text(fmt::format("{:#x}", i).c_str());
+          ImGui::TableSetColumnIndex(1);
+          ImGui::Text(fmt::format("{:#x}", opcode).c_str());
+          ImGui::TableSetColumnIndex(2);
+          ImGui::Text(fmt::format("{}", disassembled).c_str());
+        }
+      }
+      ImGui::EndTable();
+      ImGui::EndChild();
     }
-    ImGui::EndChild();
   }
+
   ImGui::End();
 }
 
