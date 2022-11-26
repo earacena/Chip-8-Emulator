@@ -90,9 +90,36 @@ void Debugger::place_widgets(CPU* cpu) {
 
   }
 
+  // Display stack
+  if (ImGui::CollapsingHeader("Stack")) {
+    if (ImGui::BeginTable("stack_table", 2, ImGuiTableFlags_SizingFixedFit)) {
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Text("Position");
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Text("Value");
+      
+      ImGui::TableNextRow();
+      ImGui::TableSetColumnIndex(0);
+      ImGui::Separator();
+      ImGui::TableSetColumnIndex(1);
+      ImGui::Separator();
+
+      for (uint16_t i = 0; i < cpu->stack.size(); ++i) {
+          ImGui::TableNextRow();
+          ImGui::TableSetColumnIndex(0);
+          ImGui::Selectable(fmt::format("{:#x}", i).c_str(), true);
+          ImGui::TableSetColumnIndex(1);
+          ImGui::Selectable(fmt::format("{:#x}", cpu->stack.at(i)).c_str(), true);
+      }
+
+      ImGui::EndTable();
+    }
+  }
+
   // Display memory
   if (ImGui::CollapsingHeader("Memory")) {
-    ImGui::BeginChild("Scrolling");
+    ImGui::BeginChild("ScrollingMemory");
     if (ImGui::BeginTable("memory_table", 3, ImGuiTableFlags_SizingFixedFit))
     {
       ImGui::TableNextRow();
