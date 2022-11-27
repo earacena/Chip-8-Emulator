@@ -35,6 +35,7 @@ public:
   std::set<uint8_t> breakpoints;
 
   bool paused = false;
+  bool stepped = false;
 
 private:
   const char * glsl_version_ = "#version 130";

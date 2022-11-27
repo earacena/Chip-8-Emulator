@@ -55,6 +55,10 @@ void Debugger::place_widgets(CPU* cpu) {
     paused = true;
   }
 
+  if (ImGui::Button("Step")) {
+    stepped = true;
+  }
+
   // Display registers
   if (ImGui::CollapsingHeader("Registers")) {
     if (ImGui::BeginTable("register_table", 2)) {

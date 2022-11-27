@@ -37,7 +37,7 @@ void Chip8::run(Debugger* debugger = nullptr) {
     if (debugger != nullptr)
       debugger->render(&cpu_);
 
-    if (!debugger->paused) {
+    if (!debugger->paused || debugger->stepped) {
       cpu_.emulate_cycle();
 
       // Draw changes on screen
@@ -54,6 +54,9 @@ void Chip8::run(Debugger* debugger = nullptr) {
       // Sleep to slow down emulation
       // std::this_thread::sleep_for(std::chrono::milliseconds(2));
     }
+
+    if (debugger->stepped)
+      debugger->stepped = false;
   }
 }
 
