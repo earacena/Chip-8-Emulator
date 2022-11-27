@@ -24,7 +24,7 @@ void Chip8::run(Debugger* debugger = nullptr) {
           (event_.type == SDL_WINDOWEVENT &&
            event_.window.event == SDL_WINDOWEVENT_CLOSE &&
            (event_.window.windowID == display_.get_window_id() ||
-            event_.window.windowID == display_.get_window_id()))) {
+            event_.window.windowID == debugger->get_window_id()))) {
         cleanup();
         if (debugger != nullptr) debugger->cleanup();
       } else if (event_.type == SDL_KEYUP) {
