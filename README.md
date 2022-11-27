@@ -36,7 +36,7 @@ cmake --build .
 
 ## Run
 
-To run with selected ROM, type:
+To run with selected ROM, enter the following in the build folder:
 
 ```bash
 ./chip8 [ROM filepath]
