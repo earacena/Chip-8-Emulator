@@ -15,6 +15,9 @@ project(
 
 # Find/Define libraries
 
+# Catch2
+find_package(Catch2 3 REQUIRED)
+
 # fmtlib
 find_package(fmt REQUIRED)
 
@@ -33,7 +36,7 @@ add_library(
   external/imgui/imgui_demo.cpp
 )
 
-# Define executable target
+# Define main executable target
 add_executable(
   chip8
   src/main.cpp
@@ -43,16 +46,24 @@ add_executable(
   src/CPU.cpp
 )
 
+# Define test excutable target
+add_executable(
+  tests
+  tests/CPU_test.cpp
+  src/CPU.cpp
+)
+
 # Include directories
 target_include_directories(chip8 PUBLIC "${SDL2_INCLUDE_DIR}")
 target_include_directories(imgui PUBLIC "${SDL2_INCLUDE_DIR}")
 target_include_directories(imgui PUBLIC "external/imgui")
-
+target_include_directories(tests PUBLIC "${SDL2_INCLUDE_DIR}")
 # Link libraries
-#target_link_libraries(imgui)
 target_link_libraries(chip8 ${SDL2_LIBRARIES})
 target_link_libraries(chip8 imgui -lGL)
 target_link_libraries(chip8 fmt::fmt)
+
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 
 # Set compiler flags
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -63,3 +74,4 @@ endif()
 
 # Set the C++ standard
 target_compile_features(chip8 PRIVATE cxx_std_20)
+target_compile_features(tests PRIVATE cxx_std_20)

@@ -21,6 +21,7 @@ A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgo
 * cmake
 * SDL2 (2.42.2)
 * fmtlib
+* Catch2 for tests (3.1.0 and up)
 
 ## Build
 
