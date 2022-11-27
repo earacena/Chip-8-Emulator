@@ -51,4 +51,22 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     // Check if the address jumped to is correct
     CHECK(cpu.program_counter == 0x300);
   }
+
+  SECTION("op_2NNN calls subroutine at NNN") {
+    // Prepare
+    cpu.stack_ptr = 0;
+    cpu.program_counter = 0x300;
+
+    REQUIRE(cpu.stack_ptr == 0);
+    REQUIRE(cpu.program_counter == 0x300);
+
+    // Execute
+    cpu.opcode = 0x2400;
+    cpu.execute();
+
+    // Check if subroutine was called
+    CHECK(cpu.program_counter == 0x400);
+    CHECK(cpu.stack_ptr == 1);
+    CHECK(cpu.stack[0] == 0x300);
+  }
 };
