@@ -1,6 +1,6 @@
 # CHIP-8 Emulator
 
-A simple emulation of the CHIP-8 interpreted language written in C++. Used Cowgod's technical reference [1] for opcode implementations.
+An emulation of the CHIP-8 interpreted language with a debugger/disassembler written in C++.
 
 ## Controls (case-sensitive)
 
@@ -58,4 +58,4 @@ make clean
 
 ## References
 
- [1] <https://web.archive.org/web/20130401182240/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.0>
+ <https://web.archive.org/web/20130401182240/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.0>
