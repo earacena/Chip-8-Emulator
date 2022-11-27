@@ -30,11 +30,25 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     REQUIRE(cpu.program_counter == 0x400);
     REQUIRE(cpu.stack[0] == 0x300);
 
+    // Execute
     cpu.opcode = 0x00EE;
     cpu.execute();
 
     // Check that cpu returned from subroutine
-    REQUIRE(cpu.stack_ptr == 0);
-    REQUIRE(cpu.program_counter == 0x302);
+    CHECK(cpu.stack_ptr == 0);
+    CHECK(cpu.program_counter == 0x302);
+  }
+
+  SECTION("op_1NNN jumps to address NNN") {
+    // Prepare
+    cpu.program_counter = 0x200;
+    REQUIRE(cpu.program_counter == 0x200);
+
+    // Execute
+    cpu.opcode = 0x1300;
+    cpu.execute();
+
+    // Check if the address jumped to is correct
+    CHECK(cpu.program_counter == 0x300);
   }
 };
