@@ -18,7 +18,8 @@ Chip8::Chip8(const std::string& game_name) {
 void Chip8::run(Debugger* debugger = nullptr) {
   while (display_.is_running()) {
     while (display_.poll_event(event_)) {
-      if (debugger != nullptr) ImGui_ImplSDL2_ProcessEvent(&event_);
+      if (debugger != nullptr) 
+        ImGui_ImplSDL2_ProcessEvent(&event_);
 
       if (event_.type == SDL_QUIT ||
           (event_.type == SDL_WINDOWEVENT &&
@@ -32,18 +33,27 @@ void Chip8::run(Debugger* debugger = nullptr) {
       }
     }
 
-    cpu_.emulate_cycle();
-
-    // Draw changes on screen
-    display_.clear_screen();
-    if (cpu_.draw_flag == 1) display_.draw_graphics(cpu_.screen);
-    display_.update_screen();
-
     // Render and update debugger window
-    if (debugger != nullptr) debugger->render(&cpu_);
+    if (debugger != nullptr)
+      debugger->render(&cpu_);
 
-    // Sleep to slow down emulation
-    // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    if (!debugger->paused) {
+      cpu_.emulate_cycle();
+
+      // Draw changes on screen
+      display_.clear_screen();
+      if (cpu_.draw_flag == 1) display_.draw_graphics(cpu_.screen);
+      display_.update_screen();
+
+      // Check for breakpoints
+      if (debugger->breakpoints.contains(cpu_.program_counter)) {
+        debugger->paused = true;
+        debugger->breakpoints.erase(cpu_.program_counter);
+      }
+
+      // Sleep to slow down emulation
+      // std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    }
   }
 }
 

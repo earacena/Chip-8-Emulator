@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
+#include <set>
 
 // SDL2
 #include "SDL.h"
@@ -28,6 +29,12 @@ public:
   void render(CPU * cpu);
   std::string disassemble(uint16_t opcode);
   void cleanup();
+  Uint32 get_window_id();
+
+  // Breakpoint addresses
+  std::set<uint8_t> breakpoints;
+
+  bool paused = false;
 
 private:
   const char * glsl_version_ = "#version 130";

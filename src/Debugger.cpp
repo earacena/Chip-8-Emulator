@@ -46,6 +46,15 @@ Debugger::Debugger() {
 void Debugger::place_widgets(CPU* cpu) {
   ImGui::Begin("Debugger", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
 
+  // Add buttons for running and pausing execution
+  if (ImGui::Button("Start")) {
+    paused = false;
+  }
+
+  if (ImGui::Button("Pause")) {
+    paused = true;
+  }
+
   // Display registers
   if (ImGui::CollapsingHeader("Registers")) {
     if (ImGui::BeginTable("register_table", 2)) {
@@ -341,4 +350,9 @@ void Debugger::cleanup() {
 
   window_ = nullptr;
   io_ = nullptr;
+}
+
+Uint32 Debugger::get_window_id()
+{
+  return SDL_GetWindowID(window_);
 }
