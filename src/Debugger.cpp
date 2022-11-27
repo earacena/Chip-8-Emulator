@@ -159,18 +159,33 @@ void Debugger::place_widgets(CPU* cpu) {
         disassembled = disassemble(opcode);
         if (i == cpu->program_counter) {
           ImGui::TableSetColumnIndex(0);
-          ImGui::Selectable(fmt::format("{:#x}", i).c_str(), true);
+          if (breakpoints.contains(i))
+            ImGui::Bullet();
+
+          if (ImGui::Selectable(fmt::format("{:#x}", i).c_str(), true)) {
+            if (!breakpoints.contains(i))
+              breakpoints.insert(i);
+            else
+              breakpoints.erase(i);
+          }
           ImGui::TableSetColumnIndex(1);
           ImGui::Selectable(fmt::format("{:#x}", opcode).c_str(), true);
           ImGui::TableSetColumnIndex(2);
           ImGui::Selectable(fmt::format("{}", disassembled).c_str(), true);
         } else {
           ImGui::TableSetColumnIndex(0);
-          ImGui::Text(fmt::format("{:#x}", i).c_str());
+          if (breakpoints.contains(i))
+            ImGui::Bullet();
+          if (ImGui::Selectable(fmt::format("{:#x}", i).c_str(), true)) {
+            if (!breakpoints.contains(i))
+              breakpoints.insert(i);
+            else
+              breakpoints.erase(i);
+          }
           ImGui::TableSetColumnIndex(1);
-          ImGui::Text(fmt::format("{:#x}", opcode).c_str());
+          ImGui::Text(fmt::format("{:#x}", opcode).c_str(), false);
           ImGui::TableSetColumnIndex(2);
-          ImGui::Text(fmt::format("{}", disassembled).c_str());
+          ImGui::Text(fmt::format("{}", disassembled).c_str(), false);
         }
       }
       ImGui::EndTable();
