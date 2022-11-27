@@ -14,6 +14,7 @@ An emulation of the CHIP-8 interpreted language with a debugger/disassembler wri
   * Shows stack values
   * Show memory addresses, stored values, and disassembled opcodes
   * Start, stop, and step buttons for emulation control
+  * Adding/Removing breakpoints
 
 ## Controls (case-sensitive)
 
