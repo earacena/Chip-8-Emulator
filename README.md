@@ -2,6 +2,19 @@
 
 An emulation of the CHIP-8 interpreted language with a debugger/disassembler written in C++.
 
+## Features
+
+* Emulator
+  * Loads CHIP-8 ROMs
+  * Emulates ROMs
+  * Handles input
+
+* Debugger/Disassembler
+  * Shows registers and values during emulation
+  * Shows stack values
+  * Show memory addresses, stored values, and disassembled opcodes
+  * Start, stop, and step buttons for emulation control
+
 ## Controls (case-sensitive)
 
 ```text
