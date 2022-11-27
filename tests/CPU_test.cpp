@@ -17,4 +17,24 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     // Check that screen is now empty
     CHECK(std::find(cpu.screen.begin(), cpu.screen.end(), 1) == cpu.screen.end());
   }
+
+  SECTION("op_00EE returns from subroutine") {
+    // Activate subroutine
+    cpu.stack_ptr = 0;
+    cpu.program_counter = 0x300;
+    cpu.stack[cpu.stack_ptr] = cpu.program_counter;
+    ++cpu.stack_ptr;
+    cpu.program_counter = 0x400;
+
+    REQUIRE(cpu.stack_ptr == 1);
+    REQUIRE(cpu.program_counter == 0x400);
+    REQUIRE(cpu.stack[0] == 0x300);
+
+    cpu.opcode = 0x00EE;
+    cpu.execute();
+
+    // Check that cpu returned from subroutine
+    REQUIRE(cpu.stack_ptr == 0);
+    REQUIRE(cpu.program_counter == 0x302);
+  }
 };
