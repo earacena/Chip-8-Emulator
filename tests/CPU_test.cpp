@@ -82,8 +82,8 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     cpu.opcode = 0x3A44;
     cpu.execute();
 
-    // Check if program counter in incremented two instructions
-    REQUIRE(cpu.program_counter == 0x200 + 4);
+    // Check if program counter in incremented four instructions
+    CHECK(cpu.program_counter == 0x200 + 4);
   }
 
   SECTION("op_3XNN doesn't skip next instruction if VX != NN") {
@@ -99,7 +99,7 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     cpu.execute();
 
     // Check if program counter in incremented two instructions
-    REQUIRE(cpu.program_counter == 0x200 + 2);
+    CHECK(cpu.program_counter == 0x200 + 2);
   }
   
   SECTION("op_4XNN skips next instruction if VX != NN") {
@@ -114,8 +114,8 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     cpu.opcode = 0x4C0F;
     cpu.execute();
 
-    // Check if program counter in incremented two instructions
-    REQUIRE(cpu.program_counter == 0x200 + 4);
+    // Check if program counter in incremented four instructions
+    CHECK(cpu.program_counter == 0x200 + 4);
   }
 
   SECTION("op_4XNN doesn't skip next instruction if VX == NN") {
@@ -131,7 +131,7 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     cpu.execute();
 
     // Check if program counter in incremented two instructions
-    REQUIRE(cpu.program_counter == 0x200 + 2);
+    CHECK(cpu.program_counter == 0x200 + 2);
   }
   
   SECTION("op_5XY0 skips next instruction if VX == VY") {
@@ -148,8 +148,8 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     cpu.opcode = 0x53D0;
     cpu.execute();
 
-    // Check if program counter in incremented two instructions
-    REQUIRE(cpu.program_counter == 0x200 + 4);
+    // Check if program counter in incremented four instructions
+    CHECK(cpu.program_counter == 0x200 + 4);
   }
   
   SECTION("op_5XY0 doesn't skip next instruction if VX != VY") {
@@ -167,6 +167,38 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     cpu.execute();
 
     // Check if program counter in incremented two instructions
-    REQUIRE(cpu.program_counter == 0x200 + 2);
+    CHECK(cpu.program_counter == 0x200 + 2);
+  }
+
+  SECTION("op_6XNN loads NN into register VX") {
+    // Prepare
+    cpu.V.at(0x0) = 0x00;
+    cpu.V.at(0xC) = 0x00;
+    cpu.V.at(0xD) = 0x00;
+    cpu.V.at(0x9) = 0x00;
+
+    REQUIRE(cpu.V.at(0x0) == 0x00);
+    REQUIRE(cpu.V.at(0xC) == 0x00);
+    REQUIRE(cpu.V.at(0xD) == 0x00);
+    REQUIRE(cpu.V.at(0x9) == 0x00);
+
+    // Execute
+    cpu.opcode = 0x6022;
+    cpu.execute();
+
+    cpu.opcode = 0x6C00;
+    cpu.execute();
+
+    cpu.opcode = 0x6DFF;
+    cpu.execute();
+
+    cpu.opcode = 0x691A;
+    cpu.execute();
+
+    // Check if register has loaded value
+    CHECK(cpu.V.at(0x0) == 0x22);
+    CHECK(cpu.V.at(0xC) == 0x00);
+    CHECK(cpu.V.at(0xD) == 0xFF);
+    CHECK(cpu.V.at(0x9) == 0x1A);
   }
 };
