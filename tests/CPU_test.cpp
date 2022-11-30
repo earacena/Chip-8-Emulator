@@ -70,7 +70,7 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     CHECK(cpu.stack[0] == 0x300);
   }
 
-  SECTION("op_3XNN skips next instruction if VX = NN") {
+  SECTION("op_3XNN skips next instruction if VX == NN") {
     // Prepare
     cpu.program_counter = 0x200;
     cpu.V.at(0xA) = 0x44;
@@ -128,6 +128,42 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
 
     // Execute
     cpu.opcode = 0x4C2A;
+    cpu.execute();
+
+    // Check if program counter in incremented two instructions
+    REQUIRE(cpu.program_counter == 0x200 + 2);
+  }
+  
+  SECTION("op_5XY0 skips next instruction if VX == VY") {
+    // Prepare
+    cpu.program_counter = 0x200;
+    cpu.V.at(0x3) = 0x11;
+    cpu.V.at(0xD) = 0x11;
+
+    REQUIRE(cpu.program_counter == 0x200);
+    REQUIRE(cpu.V.at(0x3) == 0x11);
+    REQUIRE(cpu.V.at(0xD) == 0x11);
+
+    // Execute
+    cpu.opcode = 0x53D0;
+    cpu.execute();
+
+    // Check if program counter in incremented two instructions
+    REQUIRE(cpu.program_counter == 0x200 + 4);
+  }
+  
+  SECTION("op_5XY0 doesn't skip next instruction if VX != VY") {
+    // Prepare
+    cpu.program_counter = 0x200;
+    cpu.V.at(0x3) = 0x11;
+    cpu.V.at(0xD) = 0xCD;
+
+    REQUIRE(cpu.program_counter == 0x200);
+    REQUIRE(cpu.V.at(0x3) == 0x11);
+    REQUIRE(cpu.V.at(0xD) == 0xCD);
+
+    // Execute
+    cpu.opcode = 0x53D0;
     cpu.execute();
 
     // Check if program counter in incremented two instructions
