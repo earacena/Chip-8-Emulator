@@ -69,4 +69,36 @@ TEST_CASE("Opcodes correctly manipulate the CPU", "[cpu]") {
     CHECK(cpu.stack_ptr == 1);
     CHECK(cpu.stack[0] == 0x300);
   }
+
+  SECTION("op_3XNN skips next instruction if VX = NN") {
+    // Prepare
+    cpu.program_counter = 0x200;
+    cpu.V.at(0xA) = 0x44;
+
+    REQUIRE(cpu.program_counter == 0x200);
+    REQUIRE(cpu.V.at(0xA) == 0x44);
+
+    // Execute
+    cpu.opcode = 0x3A44;
+    cpu.execute();
+
+    // Check if program counter in incremented two instructions
+    REQUIRE(cpu.program_counter == 0x200 + 4);
+  }
+
+  SECTION("op_3XNN doesn't skips next instruction if VX != NN") {
+    // Prepare
+    cpu.program_counter = 0x200;
+    cpu.V.at(0xA) = 0x43;
+
+    REQUIRE(cpu.program_counter == 0x200);
+    REQUIRE(cpu.V.at(0xA) == 0x43);
+
+    // Execute
+    cpu.opcode = 0x3A44;
+    cpu.execute();
+
+    // Check if program counter in incremented two instructions
+    REQUIRE(cpu.program_counter == 0x200 + 2);
+  }
 };
