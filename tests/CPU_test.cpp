@@ -220,3 +220,25 @@ TEST_CASE("op_6XNN loads NN into register VX", "[cpu][opcode]") {
   CHECK(cpu.V.at(0xD) == 0xFF);
   CHECK(cpu.V.at(0x9) == 0x1A);
 }
+
+TEST_CASE("op_7XNN sets VX to Vx + NN", "[cpu][opcode]") {
+  CPU cpu;
+
+  // Prepare
+  cpu.V.at(0x1) = 0x00;
+  cpu.V.at(0xD) = 0x01;
+
+  REQUIRE(cpu.V.at(0x1) == 0x00);
+  REQUIRE(cpu.V.at(0xD) == 0x01);
+
+  // Execute
+  cpu.opcode = 0x7122;
+  cpu.execute();
+  
+  cpu.opcode = 0x7D23;
+  cpu.execute();
+
+  // Check if register has loaded value
+  CHECK(cpu.V.at(0x1) == 0x22);
+  CHECK(cpu.V.at(0xD) == 0x24);
+}
