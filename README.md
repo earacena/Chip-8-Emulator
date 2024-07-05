@@ -25,7 +25,7 @@ An emulation of the CHIP-8 interpreted language with a debugger/disassembler wri
     [Z][X][C][V]
 ```
 
-## Suppoted Platforms
+## Supported Platforms
 
  Linux 32/64-bit distributions
   
